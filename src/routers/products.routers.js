@@ -11,6 +11,7 @@ router.get("/", (req, res) => {
     const response = limit ? products.slice(0, limit) : products;
         res.send(response);
             console.log(newManager.getProducts());
+    res.render('home', { products });
 });
   
 
