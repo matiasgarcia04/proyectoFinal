@@ -17,8 +17,6 @@ const httpServer = app.listen(port, () => {
 const socketServer = new Server(httpServer);
 
 
-
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(_dirname+'/public'));
@@ -32,7 +30,7 @@ app.get('/', (req,res)=>{
   res.render('index',{})});
 
 
-// aca empieza socket lado server-------------------------------------------------
+
 app.get('/home', (req, res) => {
     const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
     res.render('home', { products });
@@ -52,19 +50,35 @@ app.get('/realtimeproducts', (req, res) => {
             await newManager.addProduct(title, description, price, thumbnail, code, stock);
             const products = await newManager.getProducts();
             socketServer.emit('newProduct', { products });
-                 res.status(201).send({ message: "Producto agregado con éxito" });
+                 res.status(201).send({ products });
     } catch (error) {
             next(error);
          }
 });
 
-// aca termina la configuracioon de socket lado server------------------------
-
-
-
 app.use("/api/products", productsrouter);
 app.use("/api/carts", cartsrouters);
 
+
 socketServer.on('connection',socket=>{
   console.log("cliente conectado")
+  socket.on('newProduct', (product) => {
+    const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
+    const exist = products.some((p)=>p.code===product.code);
+    if(!exist){
+      products.push(product);
+    fs.writeFileSync('src/mockProducts/Products.Json', JSON.stringify(products,null, 2));
+    socketServer.emit('newProduct', { products });
+    }
+  });
+  socket.on('deleteProduct', (data) => {
+    const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
+    const index = products.findIndex((p) => p.id === data.id);
+    if (index !== -1) {
+      products.splice(index, 1);
+      fs.writeFileSync('src/mockProducts/Products.Json', JSON.stringify(products, null, 2));
+      socketServer.emit('deleteProduct', { id: data.id });
+    }
+  });
 })
+

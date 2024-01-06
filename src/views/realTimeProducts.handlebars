@@ -1,8 +1,38 @@
 
-<ul id="products">
+<div class="products" >
+  <form action="/realtimeproducts" method="POST" id="formproducts">
+    <label for="title">Título</label>
+      <input type="text" name="title" id="title" required>
+    <label for="description">Descripción</label>
+      <input type="text" name="description" id="description" required>
+    <label for="price">Precio</label>
+      <input type="number" name="price" id="price" required>
+    <label for="thumbnail">Thumbnail</label>
+      <input type="text" name="thumbnail" id="thumbnail" required>
+    <label for="code">Código</label>
+      <input type="text" name="code" id="code" required>
+    <label for="stock">Stock</label>
+      <input type="number" name="stock" id="stock" required>
+    <button type="submit">Agregar Producto</button>
+  </form>
+</div>
+
+<ul id="products" class="products">
   {{#each products}}
-    <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.code}} - {{this.stock}}</li>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{this.title}}</h5>
+        <p class="card-text">{{this.description}}</p>
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item">Precio: {{this.price}}</li>
+        <li class="list-group-item">Código: {{this.code}}</li>
+        <li class="list-group-item">Stock: {{this.stock}}</li>
+        </ul>
+        <button type="button" id="{{this.id}}" class="btn btn-danger" onclick="eliminarTarjeta(this)">Eliminar Tarjeta</button>
+      </div>
+    </div>
   {{/each}}
 </ul>
+<link rel="stylesheet" href="/css/realTimeProducts.css">
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
