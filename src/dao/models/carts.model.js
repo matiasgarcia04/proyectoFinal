@@ -10,10 +10,11 @@ const cartSchema = new mongoose.Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'products'
             },
-            quantity: Number
+            quantity: Number,
         }]
     }
 })
+
 
 const cartModel = mongoose.model(cartCollection, cartSchema)
 

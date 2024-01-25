@@ -7,13 +7,14 @@ class CartManagerDB {
     async getCartbyID(uid){
         return await cartModel.findOne({_id: uid})
     }
-    async createCart({ product, quantity }) {
+    async createCart({ product: _id, quantity: quantity }) {
         const cart = await cartModel.create({
-          products: [{ product, quantity }]
+          products: [{ product: _id, quantity: quantity }]
         });
         return cart;
       }
-      
+
+
     async deleteProduct(uid){
         return await cartModel.findByIdAndDelete({_id: uid})
     }

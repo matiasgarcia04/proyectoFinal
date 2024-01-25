@@ -4,14 +4,16 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import productsrouter from "./routers/products.routers.js";
 import cartsrouters from "./routers/carts.routers.js";
-import fs from "fs";
-import ProductManager from "./ProductManager.js";
+// import fs from "fs";
+// import ProductManager from "./ProductManager.js";
 import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
+import mongoose from "mongoose";
+import chatManagerDB from "./dao/chatManagerDB.js";
 
-const newManager = new ProductManager();
+// const newManager = new ProductManager();
 const newProdDB = new ProdManagerDB();
-
+const chatDB = new chatManagerDB();
 
 const app = express();
 const port = 8080;
@@ -37,25 +39,23 @@ app.get('/', (req,res)=>{
 
 
 app.get('/home', async (req, res) => {
-    const products = await newProdDB.getProducts();
+    const products = await newProdDB.getProductsLean();
     res.render('home', { products });
   });
 
 
 app.get('/realtimeproducts', async (req, res) => {
-    const products = await newProdDB.getProducts();
+    const products = await newProdDB.getProductsLean();
     res.render('realTimeProducts', { products });
-    socketServer.emit('newProduct', { products });
-    console.log(products);
   });
 
 
   app.post('/realtimeproducts', async (req, res, next) => {
     try {
         const { title, description, price, thumbnail, code, stock } = req.body;
-        await newProdDB.createProduct({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock});
-            const products = newProdDB.getProducts();
-            socketServer.emit('newProduct', { products });
+        await newProdDB.createProduct({ title, description, price, thumbnail, code, stock });
+            const products = await newProdDB.getProductsLean();
+            // socketServer.emit('newProduct', { products });
                  res.status(201).send({ products });
     } catch (error) {
             next(error);
@@ -65,28 +65,57 @@ app.get('/realtimeproducts', async (req, res) => {
 app.use("/api/products", productsrouter);
 app.use("/api/carts", cartsrouters);
 
+// --------------------------------message-------------------------
+app.get('/chat', (req, res) => {
+  chatDB.getChatLean().then((messages) => {
+    res.render('chat', { messages });
+  }).catch((error) => {
+    console.error('Error al buscar los mensajes:', error);
+    res.status(500).send('Error interno del servidor');
+  });
+});
+app.post('/chat',async (req, res) => {
+  
+  const message = chatDB.createChat({user:req.body.user, message:req.body.message});
+  message.then(() => {
+    res.redirect('/chat');
+  }).catch((error) => {
+    console.error('Error al guardar el mensaje:', error);
+    res.status(500).send('Error interno del servidor');
+  });
+});
+
+
+// -------------------------------socket-------------------
 
 socketServer.on('connection',socket=>{
-  console.log("cliente conectado")
-  socket.on('newProduct', (product) => {
-    const products = newProdDB.getProducts();
-    const exist = products.some((p)=>p.code===product.code);
-    if(!exist){
-      products.push(product);
-    fs.writeFileSync('src/mockProducts/Products.Json', JSON.stringify(products,null, 2));
-    socketServer.emit('newProduct', { products });
+  console.log("cliente de prueba");
+  const mostrarprod = async()=> {
+    const prod= await newProdDB.getProductsLean();
+    socketServer.emit('server:productlist',prod);
+  }
+  socket.on('newProduct',async (data)=>{
+    const newProd= await newProdDB.createProduct(data);
+    newProd.save();
+    const prodFromDB = await newProdDB.getProduct({ _id: newProd._id });
+    mostrarprod();
+
+    socketServer.emit('server:render',prodFromDB)
+
+  })
+  socket.on('deleteProduct', async (cardId) => {
+    try {
+mongoose.Types.ObjectId.isValid(cardId);
+      const deletedProduct = await newProdDB.deleteProductbyid({ _id: cardId });
+      console.log(`Product with id ${cardId} deleted successfully.`);
+    } catch (error) {
+      console.error(`Error deleting product with id ${cardId}: ${error.message}`);
     }
   });
-  socket.on('deleteProduct', (data) => {
-    const products = newProdDB.getProducts();
-    const index = products.findIndex((p) => p.id === data.id);
-    if (index !== -1) {
-      products.splice(index, 1);
-      newProdDB.getProducts();
-      socketServer.emit('deleteProduct', { id: data.id });
-    }
-  });
-})
+
+});
+
+
 
 
 // ------------------------------------ filesystem------------------------------------

@@ -18,6 +18,12 @@ class ProdManagerDB {
     async deleteProduct(uid){
         return await prodModel.findByIdAndDelete({_id: uid})
     }
+    async getProductsLean(){
+        return await prodModel.find({}).lean()
+        
+    }
+    async deleteProductbyid(uid){
+        return await prodModel.findOneAndDelete({_id: uid})}
 }
 
 export default ProdManagerDB

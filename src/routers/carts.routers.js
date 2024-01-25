@@ -11,14 +11,14 @@ router.get("/", async (req, res) => {
     const products =await newCartManager.getCarts();
     const response = limit ? products.slice(0, limit) : products;
         res.send(response);
-            console.log(newCartManager.getCarts());
+            console.log(products);
 });
 
 
 router.post("/", async (req, res, next) => {
     try {
         const { product, quantity } = req.body;
-            await newCartManager.createCart({ product, quantity });
+            await newCartManager.createCart({ product: product, quantity: quantity });
                  res.status(201).send({ message: "Producto agregado con éxito" });
     } catch (error) {
             next(error);
@@ -37,27 +37,35 @@ router.get("/:cid", async(req, res) =>{
 })
 
 
-router.post("/:cid/product/:pid", async (req, res) => {
-    try {
-      const { cid, pid } = req.params;
-      const { quantity } = req.body;
-      const result = await newCartManager.addcCart({ product: pid, quantity });
-      res.send(result);
-      console.log(result);
-    } catch (error) {
-      res.status(500).send("error");
-    }
-  });
-// router.post("/:cid/product/:pid",async(req, res) =>{
-//     try {
-//        const {cid, pid}=req.params
-//        const result = await newCartManager.updateCart(cid, pid);
-//             res.send(result);
-//                 console.log(result);
-//     } catch (error) {
-//             res.status(500).send('error')
-//         }
-// })
+
+router.post('/:cid/product/:pid', async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+
+  try {
+      const cart = await newCartManager.getCartbyID(cid);
+
+      if (!cart) {
+          return res.status(404).send('Cart not found');
+      }
+
+      const productIndex = cart.products.findIndex(product => product.toString() === pid);
+
+      if (productIndex === -1) {
+          cart.products.push({ product: pid, quantity });
+      } else {
+          cart.products[productIndex].quantity += quantity;
+      }
+
+      await cart.save();
+
+      res.send(cart);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+  }
+});
+
 export default router;
 
 

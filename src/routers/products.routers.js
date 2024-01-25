@@ -6,17 +6,16 @@ const router = Router();
 // const newManager = new ProductManager();
 const newProdDB = new ProdManagerDB();
 
-// chek
+
 router.get("/", async (req, res) => {
     const limit = req.query.limit;
     const products =await newProdDB.getProducts();
     const response = limit ? products.slice(0, limit) : products;
         res.send(response);
             console.log(newProdDB.getProducts());
-    res.render('home', { products:products });
 });
   
-// check
+
 router.get('/:pid', async (req, res) => {
     try {
         const {pid} = req.params;
@@ -32,7 +31,7 @@ router.get('/:pid', async (req, res) => {
     }
       
 });
-// check
+
 router.post("/", async (req, res, next) => {
     try {
         const { title, description, price, thumbnail, code, stock } = req.body;
@@ -43,7 +42,7 @@ router.post("/", async (req, res, next) => {
          }
 });
 
-// ckek
+
 router.put('/:pid', async (req, res, next) => {
     try {
         const { pid } = req.params;
@@ -55,7 +54,7 @@ router.put('/:pid', async (req, res, next) => {
         }
 });
 
-// chek
+
 router.delete('/:pid', async (req, res) => {
     try {
         const { pid } = req.params;
