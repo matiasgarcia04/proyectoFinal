@@ -4,14 +4,12 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import productsrouter from "./routers/products.routers.js";
 import cartsrouters from "./routers/carts.routers.js";
-// import fs from "fs";
-// import ProductManager from "./ProductManager.js";
 import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
 import mongoose from "mongoose";
 import chatManagerDB from "./dao/chatManagerDB.js";
 
-// const newManager = new ProductManager();
+
 const newProdDB = new ProdManagerDB();
 const chatDB = new chatManagerDB();
 
@@ -37,6 +35,29 @@ app.get('/', (req,res)=>{
   res.render('index',{})});
 
 
+app.get("/products", async (req, res) => {
+    const limit = parseInt(req.query.limit) || 10;
+    const pagina = parseInt(req.query.pag) || 1;
+
+    const {
+        docs,
+        hasPrevPage, 
+        hasNextPage,
+        prevPage, 
+        nextPage,
+        page 
+    } =await newProdDB.getProdPag(limit, {pagina,lean:true});
+        res.render('products', 
+        {
+        products: docs,
+        hasPrevPage, 
+        hasNextPage,
+        prevPage, 
+        nextPage,
+        page
+});});
+
+
 
 app.get('/home', async (req, res) => {
     const products = await newProdDB.getProductsLean();
@@ -55,7 +76,6 @@ app.get('/realtimeproducts', async (req, res) => {
         const { title, description, price, thumbnail, code, stock } = req.body;
         await newProdDB.createProduct({ title, description, price, thumbnail, code, stock });
             const products = await newProdDB.getProductsLean();
-            // socketServer.emit('newProduct', { products });
                  res.status(201).send({ products });
     } catch (error) {
             next(error);
@@ -114,64 +134,3 @@ mongoose.Types.ObjectId.isValid(cardId);
   });
 
 });
-
-
-
-
-// ------------------------------------ filesystem------------------------------------
-
-// app.get('/', (req,res)=>{
-//   res.render('index',{})});
-
-
-
-// app.get('/home', (req, res) => {
-//     const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
-//     res.render('home', { products });
-//   });
-
-
-// app.get('/realtimeproducts', (req, res) => {
-//     const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
-//     res.render('realTimeProducts', { products });
-//     socketServer.emit('newProduct', { products });
-//   });
-
-
-//   app.post('/realtimeproducts', async (req, res, next) => {
-//     try {
-//         const { title, description, price, thumbnail, code, stock } = req.body;
-//             await newManager.addProduct(title, description, price, thumbnail, code, stock);
-//             const products = await newManager.getProducts();
-//             socketServer.emit('newProduct', { products });
-//                  res.status(201).send({ products });
-//     } catch (error) {
-//             next(error);
-//          }
-// });
-
-// app.use("/api/products", productsrouter);
-// app.use("/api/carts", cartsrouters);
-
-
-// socketServer.on('connection',socket=>{
-//   console.log("cliente conectado")
-//   socket.on('newProduct', (product) => {
-//     const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
-//     const exist = products.some((p)=>p.code===product.code);
-//     if(!exist){
-//       products.push(product);
-//     fs.writeFileSync('src/mockProducts/Products.Json', JSON.stringify(products,null, 2));
-//     socketServer.emit('newProduct', { products });
-//     }
-//   });
-//   socket.on('deleteProduct', (data) => {
-//     const products = JSON.parse(fs.readFileSync('src/mockProducts/Products.Json', 'utf8'));
-//     const index = products.findIndex((p) => p.id === data.id);
-//     if (index !== -1) {
-//       products.splice(index, 1);
-//       fs.writeFileSync('src/mockProducts/Products.Json', JSON.stringify(products, null, 2));
-//       socketServer.emit('deleteProduct', { id: data.id });
-//     }
-//   });
-// })

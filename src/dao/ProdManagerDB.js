@@ -24,6 +24,19 @@ class ProdManagerDB {
     }
     async deleteProductbyid(uid){
         return await prodModel.findOneAndDelete({_id: uid})}
+    
+        ;
+
+
+    async getProdPag(limit,page){ 
+        const options = {
+            limit: limit,
+            page: page,
+            
+        };
+         return await prodModel.paginate({}, options,{lean:true})
+        }
+    
 }
 
 export default ProdManagerDB
