@@ -1,7 +1,16 @@
 <div>
+    <center>
     <h2>products</h2>
     {{#each products}}
          <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.code}} - {{this.stock}}</li>
+         <form action="" method="POST">
+            <input type="hidden" name="productId" value="{{this._id}}">
+            <button type="submit">Agregar al carrito</button>
+        </form>
+           <form action="/products/{{this._id}}" method="GET">
+            <input type="hidden" name="productId" value="{{this._id}}">
+            <button type="submit">detalle del producto</button>
+        </form>
 
     {{/each}}
     {{#if hasPrevPage}}
@@ -11,4 +20,5 @@
         {{#if hasNextPage}}
             <a href="/products?pag={{nextPage}}">Siguiente</a>
         {{/if}}
+    </center>
 </div>

@@ -1,3 +1,4 @@
+
 import prodModel from "./models/product.model.js"
 
 class ProdManagerDB {
@@ -25,16 +26,20 @@ class ProdManagerDB {
     async deleteProductbyid(uid){
         return await prodModel.findOneAndDelete({_id: uid})}
     
-        ;
+        async getProductlean(uid){
+            return await prodModel.findOne({_id: uid}).lean()
+        }
 
 
-    async getProdPag(limit,page){ 
+    async getProdPag(sort,limit,pagina,){ 
         const options = {
+            sort: sort ? { price: sort } : {},
             limit: limit,
-            page: page,
+            page: pagina,
+            lean:true
             
         };
-         return await prodModel.paginate({}, options,{lean:true})
+         return await prodModel.paginate({}, options)
         }
     
 }

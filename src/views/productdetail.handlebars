@@ -1,0 +1,24 @@
+
+<div>
+    <center>
+    <h1>products</h1>
+    {{#with product}}
+        <h2>{{title}}</h2>
+        <h4> Description:</h4>
+         <p>{{description}}</p>
+         <h4>Price: </h4>
+          <p>{{price}}</p>
+        <h4> Code: </h4>
+          <p>{{code}}</p>
+        <h4> Stock: </h4>
+          <p>{{stock}}</p>
+        <div></div>
+        <a href="/products">volver a todos los productos</a>
+         <form action="" method="POST">
+            <input type="hidden" name="productId" value="{{this._id}}">
+            <button type="submit">Agregar al carrito</button>
+        </div>
+        </form>
+    {{/with}}
+    </center>
+</div>

@@ -1,8 +1,10 @@
 import { Router } from "express";
 import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
 
+
 const router = Router();
 const newCartManager = new CartProdManagerDB();
+
 
 router.get("/", async (req, res) => {
     const limit = req.query.limit;
@@ -36,7 +38,7 @@ router.get("/:cid", async(req, res) =>{
 
 
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
 
@@ -60,5 +62,64 @@ router.post('/:cid/product/:pid', async (req, res) => {
       res.status(500).send('Server error');
   }
 });
+
+// check// DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
+router.delete("/:cid/products/:pid",async(req, res)=>{
+    try {
+        const { cid, pid } = req.params;
+        const cart = await newCartManager.getCartbyID(cid);
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+  
+          else {
+           cart.products.pull({_id:pid});
+           cart.save();
+           res.status(200).send({ message: 'producto borrado del carrito' });
+        }
+
+    } catch (error) {
+        res.status(500).send('error')
+    }
+    
+
+})
+
+// PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+router.put("/:cid/products/:pid",async(req, res)=>{
+    try {
+        const { cid, pid } = req.params;
+        const cart = await newCartManager.getCartbyID(cid);
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+  
+          else {
+           let product=cart.products.id({_id:pid});
+           product.quantity=req.body.quantity;
+           cart.save();
+           res.status(200).send({ message: 'producto del carrito actualizado' });
+        }
+    } catch (error) {
+        res.status(500).send('error')
+    }
+
+})
+
+
+// DELETE api/carts/:cid deberá eliminar todos los productos del carrito 
+router.delete("/:cid", async(req, res) =>{
+    try {
+        const {cid}= req.params;
+        await newCartManager.deleteCart(cid)
+            res.status(200).send({ message: 'Carrito borrado con éxito' });
+    } catch (error) {
+            res.status(500).send('error')
+        }
+})
+
+
+
+
 
 export default router;

@@ -5,21 +5,15 @@ const router = Router();
 const newProdDB = new ProdManagerDB();
 
 
-// ejemplo:http://localhost:8080/api/products?limit=3&page=3
+// ejemplo:http://localhost:8080/api/products?limit=3&page=5&?sort=asc
 router.get("/", async (req, res) => {
+    const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
     const limit = parseInt(req.query.limit) || 10;
-    const page = parseInt(req.query.page) || 1;
-
-    const products =await newProdDB.getProdPag(limit, page);
+    const pag = parseInt(req.query.pag) || 1;
+    
+    const products =await newProdDB.getProdPag(sort,limit, pag);
         res.send(products);
 });
-// router.get("/", async (req, res) => {
-//     const limit = req.query.limit;
-//     const products =await newProdDB.getProducts();
-//     const response = limit ? products.slice(0, limit) : products;
-//         res.send(response);
-//             console.log(products);
-// });
   
 
 router.get('/:pid', async (req, res) => {
@@ -60,8 +54,7 @@ router.put('/:pid', async (req, res, next) => {
         }
 });
 
-
-router.delete('/:pid', async (req, res) => {
+router.delete('/:pid', async (req, res,next) => {
     try {
         const { pid } = req.params;
             await newProdDB.deleteProduct(pid);

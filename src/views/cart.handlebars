@@ -1,0 +1,18 @@
+<div>
+    <center>
+    <h2>Mi carrito</h2>
+    {{#each products}}
+         <li>
+            <h4>{{product.title}}</h4>  
+            <h3>price:</h3><p>{{product.price}}  </p>
+            <h3>code:</h3><p>{{product.code}} </p>
+            <h3>quantity:</h3><p>{{quantity}} </p> 
+        </li>
+        {{/each}}
+        <div>
+            <a href="/products">volver a todos los productos</a>
+        </div>
+        
+    
+    </center>
+</div>

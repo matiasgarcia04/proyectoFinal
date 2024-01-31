@@ -8,10 +8,12 @@ import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
 import mongoose from "mongoose";
 import chatManagerDB from "./dao/chatManagerDB.js";
+import CartManagerDB from "./dao/CartsProdManagerDB.js";
 
 
 const newProdDB = new ProdManagerDB();
 const chatDB = new chatManagerDB();
+const newCartManager= new CartManagerDB();
 
 const app = express();
 const port = 8080;
@@ -37,7 +39,8 @@ app.get('/', (req,res)=>{
 
 app.get("/products", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
-    const pagina = parseInt(req.query.pag) || 1;
+    const pag = parseInt(req.query.pag) || 1;
+    const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
 
     const {
         docs,
@@ -46,7 +49,7 @@ app.get("/products", async (req, res) => {
         prevPage, 
         nextPage,
         page 
-    } =await newProdDB.getProdPag(limit, {pagina,lean:true});
+    } =await newProdDB.getProdPag(sort,limit, pag);
         res.render('products', 
         {
         products: docs,
@@ -58,6 +61,27 @@ app.get("/products", async (req, res) => {
 });});
 
 
+app.get('/products/:id', async (req, res) => {
+  const productId = req.params.id;
+  const {title,description,price,stock,code} = await newProdDB.getProductlean({_id:productId});
+  const product= {title,description,price,stock,code}
+  res.render('productdetail', { product });
+
+});
+
+app.get("/cart/:cid", async(req, res) =>{
+  try {
+      const {cid}= req.params;
+      const cart = await newCartManager.getCartbyIDLean({_id:cid})
+      const products= cart.products;
+      res.render('cart', { products }); 
+  } catch (error) {
+          res.status(500).send('error')
+         console.log(error)
+      }
+})
+
+
 
 app.get('/home', async (req, res) => {
     const products = await newProdDB.getProductsLean();
@@ -67,7 +91,7 @@ app.get('/home', async (req, res) => {
 
 app.get('/realtimeproducts', async (req, res) => {
     const products = await newProdDB.getProductsLean();
-    res.render('realTimeProducts', { products });
+    res.render('realtimeproducts', { products });
   });
 
 

@@ -6,12 +6,10 @@ class CartManagerDB {
         return await cartModel.find({})
         }
     // obtener un carrito especifico
-    async getCartbyID(uid){
-        return await cartModel.find({_id: uid})
-        }
-        // async getCartbyID(uid){
-        //   return await cartModel.findOne({_id: uid})
-        //   }
+        async getCartbyID(uid){
+          return await cartModel.findOne({_id: uid})
+          }
+     
 // crear un carrito vacio
     async createCart() {
         const cart = await cartModel.create({
@@ -21,7 +19,7 @@ class CartManagerDB {
       }
 
       
-    // agreagar productos al carrito elegido
+    // actualizar productos del carrito elegido
     async addCart({ product: _id, quantity: quantity }) {
         const cart = await cartModel.findByIdAndUpdate({ product: _id, quantity: quantity });
         return cart;
@@ -33,8 +31,12 @@ class CartManagerDB {
 
 
     // borrar carrito
-    async deleteProduct(uid){
+    async deleteCart(uid){
         return await cartModel.findByIdAndDelete({_id: uid})
     }
+
+    async getCartbyIDLean(uid){
+      return await cartModel.findOne({_id: uid}).lean();
+      }
 }
 export default CartManagerDB
