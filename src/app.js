@@ -9,6 +9,11 @@ import ProdManagerDB from "./dao/ProdManagerDB.js";
 import mongoose from "mongoose";
 import chatManagerDB from "./dao/chatManagerDB.js";
 import CartManagerDB from "./dao/CartsProdManagerDB.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import sessionrouter from "./routers/session.routers.js";
+import MongoStore from "connect-mongo";
+import viewsRouter from "./routers/views.routers.js";
 
 
 const newProdDB = new ProdManagerDB();
@@ -27,6 +32,17 @@ connectDB()
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(_dirname+'/public'));
+app.use(cookieParser("coderhouse"));
+app.use(session({
+  store:MongoStore.create({
+    mongoUrl:'mongodb+srv://matias:coderhouse@coderhouse.rbewc2j.mongodb.net/ecommerce?retryWrites=true&w=majority',
+    mongoOptions:{useNewUrlParser:true, useUnifiedTopology:true},
+    ttl:15,
+  }),
+  secret:'secret',
+  resave: true,
+  saveUninitialized:true
+}))
 
 
 app.engine('handlebars', handlebars.engine());
@@ -36,30 +52,41 @@ app.set('view engine', 'handlebars');
 app.get('/', (req,res)=>{
   res.render('index',{})});
 
-
 app.get("/products", async (req, res) => {
-    const limit = parseInt(req.query.limit) || 10;
-    const pag = parseInt(req.query.pag) || 1;
-    const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
+  const limit = parseInt(req.query.limit) || 10;
+  const pag = parseInt(req.query.pag) || 1;
+  const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
+  const {
+            docs,
+            hasPrevPage, 
+            hasNextPage,
+            prevPage, 
+            nextPage,
+            page 
+        } =await newProdDB.getProdPag(sort,limit, pag);
+  if (req.session.user) {
+    const { name } = req.session.user;
 
-    const {
-        docs,
-        hasPrevPage, 
-        hasNextPage,
-        prevPage, 
-        nextPage,
-        page 
-    } =await newProdDB.getProdPag(sort,limit, pag);
-        res.render('products', 
-        {
+    res.render('products', {
         products: docs,
-        hasPrevPage, 
+        hasPrevPage,
         hasNextPage,
-        prevPage, 
+        prevPage,
+        nextPage,
+        page,
+        userName: name
+    });
+} else {
+    
+    res.render('products', {
+        products: docs,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
         nextPage,
         page
-});});
-
+    });
+}});
 
 app.get('/products/:id', async (req, res) => {
   const productId = req.params.id;
@@ -106,8 +133,12 @@ app.get('/realtimeproducts', async (req, res) => {
          }
 });
 
+app.use("/",viewsRouter);
 app.use("/api/products", productsrouter);
 app.use("/api/carts", cartsrouters);
+app.use("/api/session",sessionrouter)
+
+
 
 // --------------------------------message-------------------------
 app.get('/chat', (req, res) => {

@@ -1,5 +1,12 @@
 <div>
     <center>
+         {{#if userName}}
+            <h1>Bienvenido/a, {{userName}}.</h1>
+            <form action="/api/session/logout" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" value="Logout">
+            </form>
+        {{/if}}
     <h2>products</h2>
     {{#each products}}
          <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.code}} - {{this.stock}}</li>
