@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userManagerDB from "../dao/usersManagerDB.js";
+import admin from "../middleware/admin.js";
 
 
 
@@ -11,7 +12,7 @@ router.get("/",(req,res)=>{
     res.redirect('/login')
 })
 
-router.post("/login", async (req, res) => {
+router.post("/login",admin, async (req, res) => {
     const { email, password } = req.body;
     // console.log(req.body)
 
