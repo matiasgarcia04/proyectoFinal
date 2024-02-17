@@ -14,7 +14,8 @@ import session from "express-session";
 import sessionrouter from "./routers/session.routers.js";
 import MongoStore from "connect-mongo";
 import viewsRouter from "./routers/views.routers.js";
-
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 const newProdDB = new ProdManagerDB();
 const chatDB = new chatManagerDB();
@@ -43,6 +44,9 @@ app.use(session({
   resave: true,
   saveUninitialized:true
 }))
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 app.engine('handlebars', handlebars.engine());
