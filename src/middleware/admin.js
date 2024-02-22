@@ -9,7 +9,7 @@ const admin = (req, res, next) => {
        req.session.user = {
             name: `adminCoder@coder.com`,
             email: email,
-            isAdmin : true
+            role : 'ADMIN'
         };
        return res.redirect('/products');
         

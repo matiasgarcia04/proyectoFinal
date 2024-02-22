@@ -7,7 +7,6 @@ import cartsrouters from "./routers/carts.routers.js";
 import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
 import mongoose from "mongoose";
-import chatManagerDB from "./dao/chatManagerDB.js";
 import CartManagerDB from "./dao/CartsProdManagerDB.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -16,9 +15,9 @@ import MongoStore from "connect-mongo";
 import viewsRouter from "./routers/views.routers.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import chatRouter from "./routers/chat.routers.js"
 
 const newProdDB = new ProdManagerDB();
-const chatDB = new chatManagerDB();
 const newCartManager= new CartManagerDB();
 
 const app = express();
@@ -38,7 +37,7 @@ app.use(session({
   store:MongoStore.create({
     mongoUrl:'mongodb+srv://matias:coderhouse@coderhouse.rbewc2j.mongodb.net/ecommerce?retryWrites=true&w=majority',
     mongoOptions:{useNewUrlParser:true, useUnifiedTopology:true},
-    ttl:15,
+    ttl:86400,
   }),
   secret:'secret',
   resave: true,
@@ -141,28 +140,8 @@ app.use("/",viewsRouter);
 app.use("/api/products", productsrouter);
 app.use("/api/carts", cartsrouters);
 app.use("/api/session",sessionrouter)
+app.use("/chat",chatRouter)
 
-
-
-// --------------------------------message-------------------------
-app.get('/chat', (req, res) => {
-  chatDB.getChatLean().then((messages) => {
-    res.render('chat', { messages });
-  }).catch((error) => {
-    console.error('Error al buscar los mensajes:', error);
-    res.status(500).send('Error interno del servidor');
-  });
-});
-app.post('/chat',async (req, res) => {
-  
-  const message = chatDB.createChat({user:req.body.user, message:req.body.message});
-  message.then(() => {
-    res.redirect('/chat');
-  }).catch((error) => {
-    console.error('Error al guardar el mensaje:', error);
-    res.status(500).send('Error interno del servidor');
-  });
-});
 
 
 // -------------------------------socket-------------------

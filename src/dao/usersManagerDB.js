@@ -14,9 +14,15 @@ class userManagerDB{
     async getUserByEmail({email:email}){
         return await userModel.findOne({email:email})
     }
-    async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password }){
+    // sin casociar carrito al usuario----------------------------------------------
+    // async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password }){
         
-        return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password })
+    //     return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password })
+    // }
+    // asociando carrito al usuario--------------------------
+    async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
+        
+        return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
     }
 }
 

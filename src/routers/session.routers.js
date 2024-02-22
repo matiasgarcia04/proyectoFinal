@@ -123,6 +123,23 @@ router.post('/logout', async (req, res)=>{
     console.log("borrado con exito")
 })
 
+router.get('/current', async (req, res) => {
+    try {
+      const currentUser =  req.session.user = {
+        name: `${req.user.first_name} ${req.user.last_name}`,
+        email: req.user.email,
+        id: req.user._id
+    };
+      if (!currentUser) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+      res.status(200).json(currentUser);
+    } catch (error) {
+      console.error('Error al obtener el usuario actual:', error);
+      res.status(500).json({ message: 'Error del servidor' });
+    }
+  });
+
 
 
 export default router;

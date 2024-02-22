@@ -1,11 +1,11 @@
-<h1>Chat</h1>
+
+    <h1>Chat</h1>
     <div id="messages">
       {{#each messages}}
         <p>{{user}}: {{message}}</p>
       {{/each}}
     </div>
     <form action="/chat" method="post">
-      <input type="email" name="user" placeholder="Correo del usuario">
       <input type="text" name="message" placeholder="Mensaje">
       <button type="submit">Enviar</button>
     </form>

@@ -3,34 +3,61 @@ import local from 'passport-local';
 import userManagerDB from "../dao/usersManagerDB.js";
 import { createHash, isValidPassword } from "../bcrypt.js";
 import GitHubStrategy from "passport-github2";
+import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
 
-
+const newCartManager = new CartProdManagerDB();
 const LocalStrategy= local.Strategy
 const userDB = new userManagerDB();
 
 
 const initializePassport = ()=>{
-    passport.use('register', new LocalStrategy({
-            passReqToCallback: true,
-            usernameField: 'email'
-        }, async (req, username,password,done)=>{
-            const { first_name, last_name, email, age } = req.body;
-        try {
-            const exists = await userDB.getUserByEmail({ email: req.body.email });
-                if(exists) return done(null,false);
-            const user = await userDB.createUser({
-                        first_name:first_name,
-                        last_name:last_name,
-                        email:email,
-                        age:age,
-                        password:createHash(password),
-                    });
-            return done(null,user);
+    // sin asociar carrito con usuario-----------------------
+    // passport.use('register', new LocalStrategy({
+    //         passReqToCallback: true,
+    //         usernameField: 'email'
+    //     }, async (req, username,password,done)=>{
+    //         const { first_name, last_name, email, age } = req.body;
+    //     try {
+    //         const exists = await userDB.getUserByEmail({ email: req.body.email });
+    //             if(exists) return done(null,false);
+    //         const user = await userDB.createUser({
+    //                     first_name:first_name,
+    //                     last_name:last_name,
+    //                     email:email,
+    //                     age:age,
+    //                     password:createHash(password),
+    //                 });
+    //         return done(null,user);
 
-        } catch (error) {
-            return done(error)
-        }
-    }))
+    //     } catch (error) {
+    //         return done(error)
+    //     }
+    // }))
+    // asociando carrito al usuario---------------------------
+    passport.use('register', new LocalStrategy({
+        passReqToCallback: true,
+        usernameField: 'email'
+    }, async (req, username,password,done)=>{
+        const { first_name, last_name, email, age } = req.body;
+    try {
+        const newCart= await newCartManager.createCart();
+        await newCart.save();
+        const exists = await userDB.getUserByEmail({ email: req.body.email });
+            if(exists) return done(null,false);
+        const user = await userDB.createUser({
+                    first_name:first_name,
+                    last_name:last_name,
+                    email:email,
+                    age:age,
+                    password:createHash(password),
+                    cart: newCart._id,
+                });
+        return done(null,user);
+
+    } catch (error) {
+        return done(error)
+    }
+}))
 
     passport.use('login', new LocalStrategy({
         usernameField:'email'
