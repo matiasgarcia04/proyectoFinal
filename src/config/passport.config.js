@@ -4,6 +4,7 @@ import userManagerDB from "../dao/usersManagerDB.js";
 import { createHash, isValidPassword } from "../bcrypt.js";
 import GitHubStrategy from "passport-github2";
 import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
+import configObjet from "./dotenv.js";
 
 const newCartManager = new CartProdManagerDB();
 const LocalStrategy= local.Strategy
@@ -79,8 +80,8 @@ const initializePassport = ()=>{
     }))
 
     passport.use('github', new GitHubStrategy({
-            clientID:'Iv1.31d2d4b29be62000',
-            clientSecret:'e4e3e6a45196d3cd79a5df1a4db4ddc1eb5b0077',
+            clientID:configObjet.githubclientID,
+            clientSecret:configObjet.githubClientSecret,
             callbackURL:'http://localhost:8080/api/session/githubcallback'
         },async(accessToken,refreshToken,profile,done)=>{
             console.log('profile:',profile)

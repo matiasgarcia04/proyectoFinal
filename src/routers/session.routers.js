@@ -1,7 +1,7 @@
 import { Router } from "express";
 import userManagerDB from "../dao/usersManagerDB.js";
 import admin from "../middleware/admin.js";
-import { createHash, isValidPassword } from "../bcrypt.js";
+// import { createHash, isValidPassword } from "../bcrypt.js";
 import passport from "passport";
 
 

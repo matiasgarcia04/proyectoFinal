@@ -7,7 +7,7 @@ import cartsrouters from "./routers/carts.routers.js";
 import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
 import mongoose from "mongoose";
-import CartManagerDB from "./dao/CartsProdManagerDB.js";
+// import CartManagerDB from "./dao/CartsProdManagerDB.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import sessionrouter from "./routers/session.routers.js";
@@ -15,13 +15,16 @@ import MongoStore from "connect-mongo";
 import viewsRouter from "./routers/views.routers.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import chatRouter from "./routers/chat.routers.js"
+import chatRouter from "./routers/chat.routers.js";
+import realTimeRouter from "./routers/realTimeProducts.routers.js"
+import cartid from "./routers/cartViews.routers.js";
+import configObjet from "./config/dotenv.js";
 
 const newProdDB = new ProdManagerDB();
-const newCartManager= new CartManagerDB();
+// const newCartManager= new CartManagerDB();
 
 const app = express();
-const port = 8080;
+const port = configObjet.port;
 const httpServer = app.listen(port, () => {
   console.log(`Servidor Express escuchando en el puerto ${port}`);
 });
@@ -32,14 +35,14 @@ connectDB()
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(_dirname+'/public'));
-app.use(cookieParser("coderhouse"));
+app.use(cookieParser(configObjet.cookieParser));
 app.use(session({
   store:MongoStore.create({
-    mongoUrl:'mongodb+srv://matias:coderhouse@coderhouse.rbewc2j.mongodb.net/ecommerce?retryWrites=true&w=majority',
+    mongoUrl:configObjet.mongoURL,
     mongoOptions:{useNewUrlParser:true, useUnifiedTopology:true},
     ttl:86400,
   }),
-  secret:'secret',
+  secret:configObjet.sessionSecret,
   resave: true,
   saveUninitialized:true
 }))
@@ -52,96 +55,97 @@ app.engine('handlebars', handlebars.engine());
 app.set('views',_dirname+'/views');
 app.set('view engine', 'handlebars');
 
-app.get('/', (req,res)=>{
-  res.render('index',{})});
+// app.get('/', (req,res)=>{
+//   res.render('index',{})});
 
-app.get("/products", async (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;
-  const pag = parseInt(req.query.pag) || 1;
-  const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
-  const {
-            docs,
-            hasPrevPage, 
-            hasNextPage,
-            prevPage, 
-            nextPage,
-            page 
-        } =await newProdDB.getProdPag(sort,limit, pag);
-  if (req.session.user) {
-    const { name } = req.session.user;
+// app.get("/products", async (req, res) => {
+//   const limit = parseInt(req.query.limit) || 10;
+//   const pag = parseInt(req.query.pag) || 1;
+//   const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
+//   const {
+//             docs,
+//             hasPrevPage, 
+//             hasNextPage,
+//             prevPage, 
+//             nextPage,
+//             page 
+//         } =await newProdDB.getProdPag(sort,limit, pag);
+//   if (req.session.user) {
+//     const { name } = req.session.user;
 
-    res.render('products', {
-        products: docs,
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        page,
-        userName: name
-    });
-} else {
+//     res.render('products', {
+//         products: docs,
+//         hasPrevPage,
+//         hasNextPage,
+//         prevPage,
+//         nextPage,
+//         page,
+//         userName: name
+//     });
+// } else {
     
-    res.render('products', {
-        products: docs,
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        page
-    });
-}});
+//     res.render('products', {
+//         products: docs,
+//         hasPrevPage,
+//         hasNextPage,
+//         prevPage,
+//         nextPage,
+//         page
+//     });
+// }});
 
-app.get('/products/:id', async (req, res) => {
-  const productId = req.params.id;
-  const {title,description,price,stock,code} = await newProdDB.getProductlean({_id:productId});
-  const product= {title,description,price,stock,code}
-  res.render('productdetail', { product });
+// app.get('/products/:id', async (req, res) => {
+//   const productId = req.params.id;
+//   const {title,description,price,stock,code} = await newProdDB.getProductlean({_id:productId});
+//   const product= {title,description,price,stock,code}
+//   res.render('productdetail', { product });
 
-});
+// });
 
-app.get("/cart/:cid", async(req, res) =>{
-  try {
-      const {cid}= req.params;
-      const cart = await newCartManager.getCartbyIDLean({_id:cid})
-      const products= cart.products;
-      res.render('cart', { products }); 
-  } catch (error) {
-          res.status(500).send('error')
-         console.log(error)
-      }
-})
-
-
-
-app.get('/home', async (req, res) => {
-    const products = await newProdDB.getProductsLean();
-    res.render('home', { products });
-  });
+// app.get("/cart/:cid", async(req, res) =>{
+//   try {
+//       const {cid}= req.params;
+//       const cart = await newCartManager.getCartbyIDLean({_id:cid})
+//       const products= cart.products;
+//       res.render('cart', { products }); 
+//   } catch (error) {
+//           res.status(500).send('error')
+//          console.log(error)
+//       }
+// })
 
 
-app.get('/realtimeproducts', async (req, res) => {
-    const products = await newProdDB.getProductsLean();
-    res.render('realtimeproducts', { products });
-  });
+
+// app.get('/home', async (req, res) => {
+//     const products = await newProdDB.getProductsLean();
+//     res.render('home', { products });
+//   });
 
 
-  app.post('/realtimeproducts', async (req, res, next) => {
-    try {
-        const { title, description, price, thumbnail, code, stock } = req.body;
-        await newProdDB.createProduct({ title, description, price, thumbnail, code, stock });
-            const products = await newProdDB.getProductsLean();
-                 res.status(201).send({ products });
-    } catch (error) {
-            next(error);
-         }
-});
+// app.get('/realtimeproducts', async (req, res) => {
+//     const products = await newProdDB.getProductsLean();
+//     res.render('realtimeproducts', { products });
+//   });
+
+
+//   app.post('/realtimeproducts', async (req, res, next) => {
+//     try {
+//         const { title, description, price, thumbnail, code, stock } = req.body;
+//         await newProdDB.createProduct({ title, description, price, thumbnail, code, stock });
+//             const products = await newProdDB.getProductsLean();
+//                  res.status(201).send({ products });
+//     } catch (error) {
+//             next(error);
+//          }
+// });
 
 app.use("/",viewsRouter);
+app.use("/realtimeproducts", realTimeRouter)
 app.use("/api/products", productsrouter);
 app.use("/api/carts", cartsrouters);
 app.use("/api/session",sessionrouter)
 app.use("/chat",chatRouter)
-
+app.use("/cart", cartid);
 
 
 // -------------------------------socket-------------------

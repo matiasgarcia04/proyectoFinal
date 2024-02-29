@@ -1,8 +1,9 @@
 import mongoose from "mongoose"
+import configObjet from "./dotenv.js"
 
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb+srv://matias:coderhouse@coderhouse.rbewc2j.mongodb.net/ecommerce?retryWrites=true&w=majority')
+        await mongoose.connect(configObjet.mongoURL)
         console.log('Conectado a base de datos')        
     } catch (error) {
         console.log(error)
