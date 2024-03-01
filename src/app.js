@@ -6,7 +6,7 @@ import productsrouter from "./routers/products.routers.js";
 import cartsrouters from "./routers/carts.routers.js";
 import connectDB from "./config/connectDB.js";
 import ProdManagerDB from "./dao/ProdManagerDB.js";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 // import CartManagerDB from "./dao/CartsProdManagerDB.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -19,6 +19,7 @@ import chatRouter from "./routers/chat.routers.js";
 import realTimeRouter from "./routers/realTimeProducts.routers.js"
 import cartid from "./routers/cartViews.routers.js";
 import configObjet from "./config/dotenv.js";
+import Socket from "./socket.js"
 
 const newProdDB = new ProdManagerDB();
 // const newCartManager= new CartManagerDB();
@@ -54,6 +55,8 @@ app.use(passport.session())
 app.engine('handlebars', handlebars.engine());
 app.set('views',_dirname+'/views');
 app.set('view engine', 'handlebars');
+
+
 
 // app.get('/', (req,res)=>{
 //   res.render('index',{})});
@@ -147,32 +150,35 @@ app.use("/api/session",sessionrouter)
 app.use("/chat",chatRouter)
 app.use("/cart", cartid);
 
+Socket(socketServer);
+
 
 // -------------------------------socket-------------------
 
-socketServer.on('connection',socket=>{
-  console.log("cliente de prueba");
-  const mostrarprod = async()=> {
-    const prod= await newProdDB.getProductsLean();
-    socketServer.emit('server:productlist',prod);
-  }
-  socket.on('newProduct',async (data)=>{
-    const newProd= await newProdDB.createProduct(data);
-    newProd.save();
-    const prodFromDB = await newProdDB.getProduct({ _id: newProd._id });
-    mostrarprod();
 
-    socketServer.emit('server:render',prodFromDB)
+// socketServer.on('connection',socket=>{
+//   console.log("cliente de prueba");
+//   const mostrarprod = async()=> {
+//     const prod= await newProdDB.getProductsLean();
+//     socketServer.emit('server:productlist',prod);
+//   }
+//   socket.on('newProduct',async (data)=>{
+//     const newProd= await newProdDB.createProduct(data);
+//     newProd.save();
+//     const prodFromDB = await newProdDB.getProduct({ _id: newProd._id });
+//     mostrarprod();
 
-  })
-  socket.on('deleteProduct', async (cardId) => {
-    try {
-mongoose.Types.ObjectId.isValid(cardId);
-      const deletedProduct = await newProdDB.deleteProductbyid({ _id: cardId });
-      console.log(`Product with id ${cardId} deleted successfully.`);
-    } catch (error) {
-      console.error(`Error deleting product with id ${cardId}: ${error.message}`);
-    }
-  });
+//     socketServer.emit('server:render',prodFromDB)
 
-});
+//   })
+//   socket.on('deleteProduct', async (cardId) => {
+//     try {
+// mongoose.Types.ObjectId.isValid(cardId);
+//       const deletedProduct = await newProdDB.deleteProductbyid({ _id: cardId });
+//       console.log(`Product with id ${cardId} deleted successfully.`);
+//     } catch (error) {
+//       console.error(`Error deleting product with id ${cardId}: ${error.message}`);
+//     }
+//   });
+
+// });
