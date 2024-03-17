@@ -23,6 +23,7 @@ class products {
               } =await prodDB.paginate(sort,limit, pag);
         if (req.session.user) {
           const { name } = req.session.user;
+          
       
           res.render('products', {
               products: docs,
