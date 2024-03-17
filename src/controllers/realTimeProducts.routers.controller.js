@@ -1,15 +1,15 @@
 import ProdManagerDB from "../dao/ProdManagerDB.js";
 
 
-const newProdDB = new ProdManagerDB();
+const prodDB = new ProdManagerDB();
 
 
 class productctrl {
     createProduct= async(req,res)=>{
         try {
             const { title, description, price, thumbnail, code, stock } = req.body;
-            await newProdDB.createProduct({ title, description, price, thumbnail, code, stock });
-                const products = await newProdDB.getProductsLean();
+            await prodDB.create({ title, description, price, thumbnail, code, stock });
+                const products = await prodDB.getLean();
                      res.status(201).send({ products });
         } catch (error) {
             console.error('Error:', error);

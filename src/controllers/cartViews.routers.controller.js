@@ -1,13 +1,13 @@
 import CartManagerDB from "../dao/CartsProdManagerDB.js";
 
 
-const newCartManager= new CartManagerDB();
+const cartDB= new CartManagerDB();
 
 class cartctrl {
     getCart = async (req,res)=>{
         try {
             const {cid}= req.params;
-            const cart = await newCartManager.getCartbyIDLean({_id:cid})
+            const cart = await cartDB.getByIDLean({_id:cid})
             const products= cart.products;
             res.render('cart', { products }); 
         } catch (error) {

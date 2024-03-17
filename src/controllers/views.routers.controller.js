@@ -1,11 +1,11 @@
 import ProdManagerDB from "../dao/ProdManagerDB.js";
 
-const newProdDB = new ProdManagerDB();
+const prodDB = new ProdManagerDB();
 
 class products {
 
     gotohome=async(req,res)=>{
-        const products = await newProdDB.getProductsLean();
+        const products = await prodDB.getLean();
             res.render('home', { products });
     }
 
@@ -20,7 +20,7 @@ class products {
                   prevPage, 
                   nextPage,
                   page 
-              } =await newProdDB.getProdPag(sort,limit, pag);
+              } =await prodDB.paginate(sort,limit, pag);
         if (req.session.user) {
           const { name } = req.session.user;
       
@@ -48,12 +48,12 @@ class products {
     }
     getproductbyid = async(req,res) =>{
         const productId = req.params.id;
-        const {title,description,price,stock,code} = await newProdDB.getProductlean({_id:productId});
+        const {title,description,price,stock,code} = await prodDB.getLean({_id:productId});
         const product= {title,description,price,stock,code}
             res.render('productdetail', { product });
     };
     gettorealtimeproducts=async(req,res)=>{
-        const products = await newProdDB.getProductsLean();
+        const products = await prodDB.getLean();
             res.render('realtimeproducts', { products });
     }
 

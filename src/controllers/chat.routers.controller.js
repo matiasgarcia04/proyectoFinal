@@ -5,7 +5,7 @@ const chatDB = new chatManagerDB();
 
 class chatctrl{
     getChat= async(req,res)=>{
-        chatDB.getChatLean().then((messages) => {
+        chatDB.getLean().then((messages) => {
             res.render('chat', { messages });
           }).catch((error) => {
             console.error('Error al buscar los mensajes:', error);
@@ -14,7 +14,7 @@ class chatctrl{
     }
     createChat= async(req,res)=>{
         const { name } = req.session.user;
-    const message = chatDB.createChat({user:name, message:req.body.message});
+    const message = chatDB.create({user:name, message:req.body.message});
     message.then(() => {
       res.redirect('/chat');
     }).catch((error) => {

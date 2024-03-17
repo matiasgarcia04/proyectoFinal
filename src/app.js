@@ -5,7 +5,7 @@ import { Server } from "socket.io";
 import productsrouter from "./routers/products.routers.js";
 import cartsrouters from "./routers/carts.routers.js";
 import connectDB from "./config/connectDB.js";
-import ProdManagerDB from "./dao/ProdManagerDB.js";
+// import ProdManagerDB from "./dao/ProdManagerDB.js";
 // import mongoose from "mongoose";
 // import CartManagerDB from "./dao/CartsProdManagerDB.js";
 import cookieParser from "cookie-parser";
@@ -21,7 +21,7 @@ import cartid from "./routers/cartViews.routers.js";
 import configObjet from "./config/dotenv.js";
 import Socket from "./socket.js"
 
-const newProdDB = new ProdManagerDB();
+// const newProdDB = new ProdManagerDB();
 // const newCartManager= new CartManagerDB();
 
 const app = express();

@@ -1,12 +1,13 @@
 import passport from "passport";
 import local from 'passport-local';
 import userManagerDB from "../dao/usersManagerDB.js";
-import { createHash, isValidPassword } from "../bcrypt.js";
+import { createHash, isValidPassword } from "./bcrypt.js";
 import GitHubStrategy from "passport-github2";
 import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
 import configObjet from "./dotenv.js";
 
-const newCartManager = new CartProdManagerDB();
+
+const cartDB = new CartProdManagerDB();
 const LocalStrategy= local.Strategy
 const userDB = new userManagerDB();
 
@@ -19,9 +20,9 @@ const initializePassport = ()=>{
     //     }, async (req, username,password,done)=>{
     //         const { first_name, last_name, email, age } = req.body;
     //     try {
-    //         const exists = await userDB.getUserByEmail({ email: req.body.email });
+    //         const exists = await userDB.getByEmail({ email: req.body.email });
     //             if(exists) return done(null,false);
-    //         const user = await userDB.createUser({
+    //         const user = await userDB.create({
     //                     first_name:first_name,
     //                     last_name:last_name,
     //                     email:email,
@@ -41,11 +42,11 @@ const initializePassport = ()=>{
     }, async (req, username,password,done)=>{
         const { first_name, last_name, email, age } = req.body;
     try {
-        const newCart= await newCartManager.createCart();
+        const newCart= await cartDB.create();
         await newCart.save();
-        const exists = await userDB.getUserByEmail({ email: req.body.email });
+        const exists = await userDB.getByEmail({ email: req.body.email });
             if(exists) return done(null,false);
-        const user = await userDB.createUser({
+        const user = await userDB.create({
                     first_name:first_name,
                     last_name:last_name,
                     email:email,
@@ -64,7 +65,7 @@ const initializePassport = ()=>{
         usernameField:'email'
         }, async(username,password,done)=>{
         try {
-            const user =await userDB.getUserByEmail({email:username})
+            const user =await userDB.getByEmail({email:username})
                 if(!user){
                     console.log('user not found')
                     return done(null,false)
@@ -86,9 +87,9 @@ const initializePassport = ()=>{
         },async(accessToken,refreshToken,profile,done)=>{
             console.log('profile:',profile)
         try {
-            const exists =await userDB.getUserByEmail({email:profile._json.email})
+            const exists =await userDB.getByEmail({email:profile._json.email})
             if(!exists){
-                const user = await userDB.createUser({
+                const user = await userDB.create({
                     first_name:profile.username,
                     last_name:profile.username,
                     email:profile._json.email,
@@ -107,7 +108,7 @@ const initializePassport = ()=>{
         done(null, user._id)
     })
     passport.deserializeUser(async (id, done)=>{
-        let user= await userDB.getUser({_id:id})
+        let user= await userDB.getByID({_id:id})
         done(null,user)
     })
     

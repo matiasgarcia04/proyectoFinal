@@ -1,14 +1,14 @@
 import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
 
 
-const newCartManager = new CartProdManagerDB();
+const cartDB = new CartProdManagerDB();
 
 class carts{
 
 
     getCarts= async(req,res)=>{
         const limit = req.query.limit;
-    const products =await newCartManager.getCarts();
+    const products =await cartDB.get();
     const response = limit ? products.slice(0, limit) : products;
         res.send(response);
             console.log(products);
@@ -18,7 +18,7 @@ class carts{
     createCart= async(req,res)=>{
         try {
         
-            await newCartManager.createCart();
+            await cartDB.create();
                  res.status(201).send({ message: "carrito creado con éxito" });
     } catch (error) {
             next(error);
@@ -29,7 +29,7 @@ class carts{
     getCartByID= async(req,res)=>{
         try {
             const {cid}= req.params;
-            const cart = await newCartManager.getCartbyID(cid)
+            const cart = await cartDB.getByID(cid)
                 res.status(200).send(cart);
         } catch (error) {
                 res.status(500).send('error')
@@ -41,7 +41,7 @@ class carts{
   const { quantity } = req.body;
 
   try {
-    const cart = await newCartManager.getCartbyID(cid);
+    const cart = await cartDB.getByID(cid);
 
           if (!cart) {
               return res.status(404).send('Cart not found');
@@ -64,7 +64,7 @@ class carts{
     deleteProduct= async(req,res)=>{
         try {
             const { cid, pid } = req.params;
-            const cart = await newCartManager.getCartbyID(cid);
+            const cart = await cartDB.getByID(cid);
             if (!cart) {
                 return res.status(404).send('Cart not found');
             }
@@ -83,7 +83,7 @@ class carts{
     updateQuantity= async(req,res)=>{
         try {
             const { cid, pid } = req.params;
-            const cart = await newCartManager.getCartbyID(cid);
+            const cart = await cartDB.getByID(cid);
             if (!cart) {
                 return res.status(404).send('Cart not found');
             }
@@ -101,7 +101,7 @@ class carts{
     deleteCart=async(req,res)=>{
         try {
             const {cid}= req.params;
-            await newCartManager.deleteCart(cid)
+            await cartDB.delete(cid)
                 res.status(200).send({ message: 'Carrito borrado con éxito' });
         } catch (error) {
                 res.status(500).send('error')

@@ -2,16 +2,16 @@ import userModel from "./models/user.model.js";
 
 
 class userManagerDB{
-    async getUsers(){
+    async get(){
         return await userModel.find({})
     }
-    async getUser(uid){
+    async getByID(uid){
         return await userModel.findOne({_id: uid})
     }
-    async getUserB({password: password,email:email}){
-        return await userModel.findOne({password: password,email:email})
-    }
-    async getUserByEmail({email:email}){
+    // async getUserB({password: password,email:email}){
+    //     return await userModel.findOne({password: password,email:email})
+    // }
+    async getByEmail({email:email}){
         return await userModel.findOne({email:email})
     }
     // sin casociar carrito al usuario----------------------------------------------
@@ -20,11 +20,37 @@ class userManagerDB{
     //     return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password })
     // }
     // asociando carrito al usuario--------------------------
-    async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
+    async create ({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
         
         return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
     }
 }
+
+
+// class userManagerDB{
+//     async getUsers(){
+//         return await userModel.find({})
+//     }
+//     async getUser(uid){
+//         return await userModel.findOne({_id: uid})
+//     }
+//     // async getUserB({password: password,email:email}){
+//     //     return await userModel.findOne({password: password,email:email})
+//     // }
+//     async getUserByEmail({email:email}){
+//         return await userModel.findOne({email:email})
+//     }
+//     // sin casociar carrito al usuario----------------------------------------------
+//     // async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password }){
+        
+//     //     return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password })
+//     // }
+//     // asociando carrito al usuario--------------------------
+//     async createUser({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
+        
+//         return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
+//     }
+// }
 
 
 export default userManagerDB;
