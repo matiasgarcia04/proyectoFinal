@@ -11,7 +11,8 @@ class sessionctrl {
         req.session.user = {
                             name: `${req.user.first_name} ${req.user.last_name}`,
                             email: req.user.email,
-                            id: req.user._id
+                            id: req.user._id,
+                            cart: req.user.cart
                         };
     res.redirect('/products');
     }

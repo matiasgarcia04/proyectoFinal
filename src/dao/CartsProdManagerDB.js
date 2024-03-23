@@ -24,6 +24,13 @@ class CartManagerDB {
         const cart = await cartModel.findByIdAndUpdate({ product: _id, quantity: quantity });
         return cart;
       }
+
+
+      async add2({filter}) {
+        const cart = await cartModel.findByIdAndUpdate({filter});
+        return cart;
+      }
+
     async update(uid){
         return await cartModel.findByIdAndUpdate({_id: uid})
 

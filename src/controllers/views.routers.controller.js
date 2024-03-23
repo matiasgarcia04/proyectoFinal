@@ -48,11 +48,21 @@ class products {
 
     }
     getproductbyid = async(req,res) =>{
+        // req.session.user = {
+        //     name: `${req.user.first_name} ${req.user.last_name}`,
+        //     email: req.user.email,
+        //     id: req.user._id,
+        //     cart: req.user.cart
+        // };
+        // const {cart} = req.session.user
+        
         const productId = req.params.id;
-        const {title,description,price,stock,code} = await prodDB.getLean({_id:productId});
+        const {title,description,price,stock,code} = await prodDB.getByIDlean({_id:productId});
         const product= {title,description,price,stock,code}
             res.render('productdetail', { product });
+        
     };
+
     gettorealtimeproducts=async(req,res)=>{
         const products = await prodDB.getLean();
             res.render('realtimeproducts', { products });
