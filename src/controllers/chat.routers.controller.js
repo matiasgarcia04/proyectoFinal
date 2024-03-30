@@ -1,7 +1,8 @@
-import chatManagerDB from "../dao/chatManagerDB.js";
+// import chatManagerDB from "../dao/chatManagerDB.js";
+import { chatDB } from "../services/services.js";
 
 
-const chatDB = new chatManagerDB();
+// const chatDB = new chatManagerDB();
 
 class chatctrl{
     getChat= async(req,res)=>{

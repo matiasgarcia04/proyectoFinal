@@ -1,7 +1,8 @@
-import ProdManagerDB from "../dao/ProdManagerDB.js"
+// import ProdManagerDB from "../dao/ProdManagerDB.js"
+import { prodDB } from "../services/services.js";
 
 
-const prodDB = new ProdManagerDB();
+// const prodDB = new ProdManagerDB();
 
 
 class apiproducts{

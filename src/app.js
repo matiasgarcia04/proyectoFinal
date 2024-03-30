@@ -17,6 +17,8 @@ import realTimeRouter from "./routers/realTimeProducts.routers.js"
 import cartid from "./routers/cartViews.routers.js";
 import configObjet from "./config/dotenv.js";
 import Socket from "./socket.js"
+import handleErrors from "./middleware/error.js";
+import mockingproducts from "./routers/mockingProducts.routers.js"
 
 
 const app = express();
@@ -59,5 +61,10 @@ app.use("/api/carts", cartsrouters);
 app.use("/api/session",sessionrouter)
 app.use("/chat",chatRouter)
 app.use("/cart", cartid);
+app.use("/mockingproducts",mockingproducts);
+
+
+app.use(handleErrors);
+
 
 Socket(socketServer);

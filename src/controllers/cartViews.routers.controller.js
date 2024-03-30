@@ -1,12 +1,13 @@
-import CartManagerDB from "../dao/CartsProdManagerDB.js";
-import purchaseManagerDB from "../dao/purchaseManagerDB.js";
-import ProdManagerDB from "../dao/ProdManagerDB.js";
+// import CartManagerDB from "../dao/CartsProdManagerDB.js";
+// import purchaseManagerDB from "../dao/purchaseManagerDB.js";
+// import ProdManagerDB from "../dao/ProdManagerDB.js";
+import { prodDB,cartDB,ticketDB } from "../services/services.js";
 
 
 
-const cartDB= new CartManagerDB();
-const probDB = new ProdManagerDB();
-const ticketDB = new purchaseManagerDB();
+// const cartDB= new CartManagerDB();
+// const probDB = new ProdManagerDB();
+// const ticketDB = new purchaseManagerDB();
 
 class cartctrl {
     getCart = async (req,res)=>{
@@ -70,7 +71,7 @@ class cartctrl {
         }
         for (const productId of productsNotPurchased) {
         // Encuentra el producto correspondiente en la base de datos
-        const productToAdd = await probDB.getByID(productId);
+        const productToAdd = await prodDB.getByID(productId);
         if (productToAdd) {
             // Agrega el producto al carrito con una cantidad predeterminada (por ejemplo, 1)
             cart.products.push({

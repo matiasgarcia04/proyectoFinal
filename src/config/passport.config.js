@@ -1,47 +1,36 @@
 import passport from "passport";
 import local from 'passport-local';
-import userManagerDB from "../dao/usersManagerDB.js";
 import { createHash, isValidPassword } from "./bcrypt.js";
 import GitHubStrategy from "passport-github2";
-import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
 import configObjet from "./dotenv.js";
+import {userDB, cartDB} from "../services/services.js"
+// import CustomError from "../errors/customError.js";
+// import EErrors from "../errors/enum.js";
 
 
-const cartDB = new CartProdManagerDB();
+
 const LocalStrategy= local.Strategy
-const userDB = new userManagerDB();
-
 
 const initializePassport = ()=>{
-    // sin asociar carrito con usuario-----------------------
-    // passport.use('register', new LocalStrategy({
-    //         passReqToCallback: true,
-    //         usernameField: 'email'
-    //     }, async (req, username,password,done)=>{
-    //         const { first_name, last_name, email, age } = req.body;
-    //     try {
-    //         const exists = await userDB.getByEmail({ email: req.body.email });
-    //             if(exists) return done(null,false);
-    //         const user = await userDB.create({
-    //                     first_name:first_name,
-    //                     last_name:last_name,
-    //                     email:email,
-    //                     age:age,
-    //                     password:createHash(password),
-    //                 });
-    //         return done(null,user);
 
-    //     } catch (error) {
-    //         return done(error)
-    //     }
-    // }))
-    // asociando carrito al usuario---------------------------
     passport.use('register', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email'
     }, async (req, username,password,done)=>{
         const { first_name, last_name, email, age } = req.body;
     try {
+        // if (!first_name || !last_name || !email) {
+        //     CustomError.createError({
+        //         name: 'User creation error',
+        //         cause: generateUserErrorInfo({
+        //             first_name: nombre, 
+        //             last_name: apellido, 
+        //             email
+        //         }),
+        //         message: 'Error Trying to create user',
+        //         code: EErrors.INVALID_TYPES_ERROR
+        //     })
+        // }
         const newCart= await cartDB.create();
         await newCart.save();
         const exists = await userDB.getByEmail({ email: req.body.email });

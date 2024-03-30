@@ -1,7 +1,8 @@
-import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
+// import CartProdManagerDB from "../dao/CartsProdManagerDB.js";
+import { cartDB } from "../services/services.js";
 
 
-const cartDB = new CartProdManagerDB();
+// const cartDB = new CartProdManagerDB();
 
 class carts{
 
@@ -63,27 +64,7 @@ class carts{
       res.status(500).send('Server error');
   }
     }
-
-    // opcion del profesor-----
-    // addToCart = async (req, res) => {
-    //     try {
-    //         const { cid, pid } = req.params
-    //         const { quantity } = req.body
-    //         const product = { id: pid, quantity }
-    //         // console.log('cart controller: ',product)
-    //         // console.log('cart controller cid: ',cid)
-    //         // console.log('cart controller pid: ',pid)
-    //         const resp = await cartService.addProductToCart(cid, product)
-    //         if (!resp) return res.status(404).json({status: 'error', message: 'Cart not found'})
-    //         res.status(200).json({
-    //             status: 'success', 
-    //             message: 'Product added to cart'
-    //         })        
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
+    
     deleteProduct= async(req,res)=>{
         try {
             const { cid, pid } = req.params;
