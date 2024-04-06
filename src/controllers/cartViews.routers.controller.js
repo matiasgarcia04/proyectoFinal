@@ -18,7 +18,8 @@ class cartctrl {
             res.render('cart', { products }); 
         } catch (error) {
                 res.status(500).send('error')
-               console.log(error)
+            //    console.log(error)
+             req.logger.error(error);
             }
     }
     purchase = async (req,res)=>{
@@ -91,7 +92,8 @@ class cartctrl {
                     
                     });
             } catch (error) {
-                console.error('Error al finalizar la compra:', error);
+                // console.error('Error al finalizar la compra:', error);
+                req.logger.error('Error al finalizar la compra:', error);
             return res.status(500).json({ message: 'Error interno del servidor' });
             }
     }

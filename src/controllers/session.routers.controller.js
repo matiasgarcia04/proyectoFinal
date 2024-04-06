@@ -44,7 +44,8 @@ class sessionctrl {
           }
           res.status(200).json(user);
         } catch (error) {
-          console.error('Error al obtener el usuario actual:', error);
+          // console.error('Error al obtener el usuario actual:', error);
+          req.logger.error('Error al obtener el usuario actual:', error);
           res.status(500).json({ message: 'Error del servidor' });
         }
   }

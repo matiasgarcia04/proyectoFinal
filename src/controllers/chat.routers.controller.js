@@ -9,7 +9,8 @@ class chatctrl{
         chatDB.getLean().then((messages) => {
             res.render('chat', { messages });
           }).catch((error) => {
-            console.error('Error al buscar los mensajes:', error);
+            // console.error('Error al buscar los mensajes:', error);
+            req.logger.error('Error al buscar los mensajes:', error);
             res.status(500).send('Error interno del servidor');
           });
     }
@@ -19,7 +20,8 @@ class chatctrl{
     message.then(() => {
       res.redirect('/chat');
     }).catch((error) => {
-      console.error('Error al guardar el mensaje:', error);
+      // console.error('Error al guardar el mensaje:', error);
+      req.logger.error('Error al guardar el mensaje:', error);
       res.status(500).send('Error interno del servidor');
     });
     }

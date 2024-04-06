@@ -13,7 +13,8 @@ class productctrl {
                 const products = await prodDB.getLean();
                      res.status(201).send({ products });
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
+            req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
              }
     }

@@ -4,7 +4,7 @@ import program from "./commander.js";
 const { mode } = program.opts()
 dotenv.config(
     {
-        path: mode === 'test' ? './.env.test' : './.env'
+        path: mode === 'production' ? './.env.production' : './.env'
     }
 );
 
@@ -18,7 +18,9 @@ const configObjet = {
     githubclientID: process.env.GITHUB_CLIENTID,
     githubClientSecret: process.env.GITHUB_CLIENTSECRET,
     adminEmail: process.env.ADMIN_EMAIL,
-    adminPassword: process.env.ADMIN_PASSWORD
+    adminPassword: process.env.ADMIN_PASSWORD,
+    node_env: process.env.NODE_ENV
+
 
 }
 

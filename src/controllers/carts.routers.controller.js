@@ -12,7 +12,7 @@ class carts{
     const products =await cartDB.get();
     const response = limit ? products.slice(0, limit) : products;
         res.send(response);
-            console.log(products);
+            // console.log(products);
 
     }
 
@@ -60,7 +60,8 @@ class carts{
     
           res.send(cart);
   } catch (error) {
-      console.error(error);
+    //   console.error(error);
+      req.logger.error(error);
       res.status(500).send('Server error');
   }
     }

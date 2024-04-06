@@ -19,12 +19,14 @@ import configObjet from "./config/dotenv.js";
 import Socket from "./socket.js"
 import handleErrors from "./middleware/error.js";
 import mockingproducts from "./routers/mockingProducts.routers.js"
-
+import { addlogger } from "./utils/logger.js";
+import loggerTest from "./routers/loggerTest.routers.js"
+import {logger} from "./utils/logger.js"
 
 const app = express();
 const port = configObjet.port;
 const httpServer = app.listen(port, () => {
-  console.log(`Servidor Express escuchando en el puerto ${port}`);
+  logger.info(`Servidor Express escuchando en el puerto ${port}`);
 });
 const socketServer = new Server(httpServer);
 connectDB()
@@ -47,6 +49,7 @@ app.use(session({
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(addlogger)
 
 
 app.engine('handlebars', handlebars.engine());
@@ -62,6 +65,7 @@ app.use("/api/session",sessionrouter)
 app.use("/chat",chatRouter)
 app.use("/cart", cartid);
 app.use("/mockingproducts",mockingproducts);
+app.use("/loggerTest",loggerTest)
 
 
 app.use(handleErrors);

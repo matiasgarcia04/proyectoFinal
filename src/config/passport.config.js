@@ -56,7 +56,8 @@ const initializePassport = ()=>{
         try {
             const user =await userDB.getByEmail({email:username})
                 if(!user){
-                    console.log('user not found')
+                    // console.log('user not found')
+                    req.logger.error('user not found')
                     return done(null,false)
 
                 }
@@ -74,7 +75,7 @@ const initializePassport = ()=>{
             clientSecret:configObjet.githubClientSecret,
             callbackURL:'http://localhost:8080/api/session/githubcallback'
         },async(accessToken,refreshToken,profile,done)=>{
-            console.log('profile:',profile)
+            // console.log('profile:',profile)
         try {
             const exists =await userDB.getByEmail({email:profile._json.email})
             if(!exists){

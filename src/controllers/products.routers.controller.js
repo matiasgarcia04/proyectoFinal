@@ -21,12 +21,13 @@ class apiproducts{
           const theproduct = await prodDB.getByID(pid);
             if (theproduct) {
               res.send(theproduct);
-                console.log(theproduct);
+                // console.log(theproduct);
             } else {
                     res.status(404).send('Producto no encontrado');
                 }
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
+            req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
         }
     }
@@ -36,7 +37,8 @@ class apiproducts{
                 await prodDB.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock});
                      res.status(201).send({ message: "Producto agregado con éxito" });
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
+            req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
              }
     }
@@ -47,7 +49,8 @@ class apiproducts{
                const updateprod= await prodDB.update(pid, {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock},{new: true});
                     res.status(200).send({ message: "Producto actualizado con éxito", updateprod });
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
+            req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
             }
     }
