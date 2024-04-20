@@ -40,6 +40,7 @@ class carts{
     addToCart= async(req,res)=>{
         // const cartid= req.session.cart;
         const { cid, pid } = req.params;
+        // const user= req.session.user;
   const { quantity } = req.body;
 //   const { quantity } = 1;
 
@@ -96,6 +97,7 @@ class carts{
               else {
                let product=cart.products.id({_id:pid});
                product.quantity=req.body.quantity;
+            //    product.quantity=1;
                cart.save();
                res.status(200).send({ message: 'producto del carrito actualizado' });
             }

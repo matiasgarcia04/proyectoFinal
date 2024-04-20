@@ -1,12 +1,11 @@
 import { Router } from "express";
 import preventprofile from "../middleware/preventprofile.js";
 import preventLogin from "../middleware/preventLog.js";
-// import ProdManagerDB from "../dao/ProdManagerDB.js";
 import products from "../controllers/views.routers.controller.js";
 import isAdmin from "../middleware/isAdmin.js";
 
+
 const router = Router();
-// const newProdDB = new ProdManagerDB();
 const controllerviews= new products();
 
 router.get('/', (req,res)=>{
@@ -34,5 +33,19 @@ router.get("/products", controllerviews.getProducts);
 
 router.get('/realtimeproducts',isAdmin, controllerviews.gettorealtimeproducts);
 
+router.get('/newpassword',(req,res)=>{
+    res.render('newpassword')
+});
+
+
+router.get("/mensajenviado",(req,res)=>{
+    res.render('mensajenviado')
+})
+
+
+router.get("/resetpassconfirm/:token",(req,res)=>{
+    const { token } = req.params;
+    res.render('resetpassconfirm', { token });
+})
 
 export default router;

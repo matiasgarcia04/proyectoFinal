@@ -19,7 +19,10 @@ const configObjet = {
     githubClientSecret: process.env.GITHUB_CLIENTSECRET,
     adminEmail: process.env.ADMIN_EMAIL,
     adminPassword: process.env.ADMIN_PASSWORD,
-    node_env: process.env.NODE_ENV
+    node_env: process.env.NODE_ENV,
+    gmail: process.env.GMAIL_USER_NODEMAILER,
+    passnodemailer: process.env.GMAIL_PASS_NODEMAILER,
+    private_key: process.env.PRIVATE_KEY
 
 
 }

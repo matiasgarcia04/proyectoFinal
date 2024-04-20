@@ -56,11 +56,14 @@ class products {
         //     cart: req.user.cart
         // };
         // const {cart} = req.session.user
-        
         const productId = req.params.id;
+        // const user= req.session.user;
+        const product= await prodDB.getByIDlean({_id:productId})
         const {title,description,price,stock,code} = await prodDB.getByIDlean({_id:productId});
-        const product= {title,description,price,stock,code}
+        // const product= {title,description,price,stock,code}
             res.render('productdetail', { product });
+            // console.log({user})
+            
         
     };
 

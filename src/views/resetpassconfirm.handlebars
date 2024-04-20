@@ -1,0 +1,9 @@
+    
+    
+<h1>Restablecer Contraseña</h1>
+<form action="/reset-password/newpass" method="POST">
+    <input type="hidden" name="token" value="{{token}}">
+    <label for="new-password">Nueva Contraseña:</label>
+    <input type="password" id="new-password" name="newPassword" required>
+    <button type="submit">Guardar Contraseña</button>
+</form>

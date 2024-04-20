@@ -22,6 +22,9 @@ import mockingproducts from "./routers/mockingProducts.routers.js"
 import { addlogger } from "./utils/logger.js";
 import loggerTest from "./routers/loggerTest.routers.js"
 import {logger} from "./utils/logger.js"
+import nodemailer from "./routers/reset-password.routers.js"
+import updaterole from "./routers/updaterole.routers.js"
+
 
 const app = express();
 const port = configObjet.port;
@@ -66,9 +69,13 @@ app.use("/chat",chatRouter)
 app.use("/cart", cartid);
 app.use("/mockingproducts",mockingproducts);
 app.use("/loggerTest",loggerTest)
+app.use("/reset-password",nodemailer)
 
+// probar esta ruta
+app.use("/api/users/premium/:uid",updaterole)
 
 app.use(handleErrors);
 
 
 Socket(socketServer);
+
