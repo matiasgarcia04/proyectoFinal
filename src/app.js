@@ -72,7 +72,7 @@ app.use("/loggerTest",loggerTest)
 app.use("/reset-password",nodemailer)
 
 // probar esta ruta
-app.use("/api/users/premium/:uid",updaterole)
+app.use("/api/users/premium",updaterole)
 
 app.use(handleErrors);
 

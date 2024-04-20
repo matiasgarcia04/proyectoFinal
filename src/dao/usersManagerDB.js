@@ -24,6 +24,9 @@ class userManagerDB{
         
         return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
     }
+    // async update(uid, {filter}) {
+    //     return await userModel.findByIdAndUpdate(uid, {filter}, {new: true});
+    //   }
 }
 
 
