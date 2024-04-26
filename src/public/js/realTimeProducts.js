@@ -14,7 +14,8 @@ form.addEventListener('submit', (event) => {
   const thumbnail = document.querySelector('#thumbnail').value;
   const code = document.querySelector('#code').value;
   const stock = document.querySelector('#stock').value;
-  const product = { title, description, price, thumbnail, code, stock };
+  const owner = document.querySelector('#owner').value;
+  const product = { title, description, price, thumbnail, code, stock,owner };
   socket.emit('newProduct', product);
 
 

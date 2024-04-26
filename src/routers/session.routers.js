@@ -1,12 +1,10 @@
 import { Router } from "express";
-// import userManagerDB from "../dao/usersManagerDB.js";
 import admin from "../middleware/admin.js";
 import passport from "passport";
 import sessionctrl from "../controllers/session.routers.controller.js";
 
-
 const router = Router();
-// const userDB = new userManagerDB();
+
 const controllersession = new sessionctrl();
 
 
@@ -35,7 +33,7 @@ router.get('/faillogin', async (req, res) => {
 })
 
 router.post('/logout', async (req, res)=>{
-
+    res.clearCookie('token')
     req.session.destroy(err => {
         if(err) return res.send({status:'Logout error', message: err})           
     })

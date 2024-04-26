@@ -1,9 +1,8 @@
 import { Router } from "express";
-// import ProdManagerDB from "../dao/ProdManagerDB.js"
 import apiproducts from "../controllers/products.routers.controller.js";
 
 const router = Router();
-// const newProdDB = new ProdManagerDB();
+
 const controllerapiprod = new apiproducts();
 
 

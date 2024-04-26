@@ -70,12 +70,10 @@ app.use("/cart", cartid);
 app.use("/mockingproducts",mockingproducts);
 app.use("/loggerTest",loggerTest)
 app.use("/reset-password",nodemailer)
-
-// probar esta ruta
 app.use("/api/users/premium",updaterole)
 
 app.use(handleErrors);
 
 
-Socket(socketServer);
 
+Socket(socketServer);

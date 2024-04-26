@@ -1,7 +1,7 @@
-// import ProdManagerDB from "../dao/ProdManagerDB.js";
+
 import { prodDB } from "../services/services.js";
 
-// const prodDB = new ProdManagerDB();
+
 
 class products {
 
@@ -49,13 +49,7 @@ class products {
 
     }
     getproductbyid = async(req,res) =>{
-        // req.session.user = {
-        //     name: `${req.user.first_name} ${req.user.last_name}`,
-        //     email: req.user.email,
-        //     id: req.user._id,
-        //     cart: req.user.cart
-        // };
-        // const {cart} = req.session.user
+
         const productId = req.params.id;
         // const user= req.session.user;
         const product= await prodDB.getByIDlean({_id:productId})
@@ -68,8 +62,9 @@ class products {
     };
 
     gettorealtimeproducts=async(req,res)=>{
+        const owner = req.session.user.role
         const products = await prodDB.getLean();
-            res.render('realtimeproducts', { products });
+            res.render('realtimeproducts', { products, owner });
     }
 
 }

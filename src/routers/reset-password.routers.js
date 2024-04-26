@@ -4,7 +4,6 @@ const router = Router();
 
 const resetpass = new resetpassctrl()
 
-// const private_key="coderhouse";
 
 
 

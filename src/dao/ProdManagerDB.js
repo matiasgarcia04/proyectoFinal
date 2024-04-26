@@ -8,13 +8,15 @@ class ProdManagerDB {
     async getByID(uid){
         return await prodModel.findOne({_id: uid})
     }
-    async create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock}){
+    //se agrega el dato owner
+    async create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock,owner:owner}){
         
-        return await prodModel.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock});
+        return await prodModel.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock, owner:owner});
         
     }
-    async update(uid, {title, description, price, thumbnail, code, stock}) {
-        return await prodModel.findByIdAndUpdate(uid, {title, description, price, thumbnail, code, stock}, {new: true});
+    //se agrega el dato owner
+    async update(uid, {title, description, price, thumbnail, code, stock,owner}) {
+        return await prodModel.findByIdAndUpdate(uid, {title, description, price, thumbnail, code, stock,owner}, {new: true});
       }
     async delete(uid){
         return await prodModel.findByIdAndDelete({_id: uid})

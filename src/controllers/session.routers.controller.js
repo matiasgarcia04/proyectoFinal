@@ -1,19 +1,35 @@
+// import configObjet from "../config/dotenv.js";
 import UserDTO from "../dto/DtoUser.js";
+// import { generatetoken } from "../utils/token.js";
+// import jwt from "jsonwebtoken";
+
 
 
 class sessionctrl {
+  
+  
+  getuser=async(req,res)=>{
+    if (!req.user) return res.status(401).send({status: 'error', error: 'creadential invalid'})
 
-    getuser=async(req,res)=>{
-        if (!req.user) return res.status(401).send({status: 'error', error: 'creadential invalid'})
+    req.session.user = {
+                        name: `${req.user.first_name} ${req.user.last_name}`,
+                        email: req.user.email,
+                        id: req.user._id,
+                        cart: req.user.cart,
+                        role:req.user.role
+                    };
+    // const user= req.session.user;
+    // const expiresIn = '24h';
+    // const secretKey = configObjet.private_key;
+    // const token = jwt.sign({ user, expiresIn }, secretKey);
 
-        req.session.user = {
-                            name: `${req.user.first_name} ${req.user.last_name}`,
-                            email: req.user.email,
-                            id: req.user._id,
-                            cart: req.user.cart
-                        };
-    res.redirect('/products');
-    }
+// res.cookie('token', token, {
+// httpOnly: true, maxAge: 1000 * 60 * 60 * 24
+// }).redirect('/products')
+res.redirect('/products')
+}
+  
+
     githubcallback=async(req,res)=>{
         req.session.user = {
             name: `${req.user.first_name}`,

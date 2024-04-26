@@ -34,7 +34,21 @@ class apiproducts{
     createProduct=async(req,res)=>{
         try {
             const { title, description, price, thumbnail, code, stock } = req.body;
-                await prodDB.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock});
+
+            const activeUser = req.session.user; // Supongamos que esto contiene los datos del usuario
+            
+        // Determinar el valor del campo "owner"
+        let owner;
+        if (activeUser) {
+            // Si hay un usuario en la sesión activa, asignar el "owner" al usuario
+            owner = activeUser.email; // Ajusta esto según la estructura de tu usuario
+        } else {
+            // Si no hay usuario en la sesión activa, asignar el "owner" al administrador
+            owner = 'ADMIN'; // Puedes usar un valor específico o adaptarlo según tus necesidades
+        }
+
+            
+                await prodDB.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock, owner:owner});
                      res.status(201).send({ message: "Producto agregado con éxito" });
         } catch (error) {
             // console.error('Error:', error);
@@ -46,7 +60,20 @@ class apiproducts{
         try {
             const { pid } = req.params;
             const {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock} = req.body;
-               const updateprod= await prodDB.update(pid, {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock},{new: true});
+
+            const activeUser = req.session.user; // Supongamos que esto contiene los datos del usuario
+
+            // Determinar el valor del campo "owner"
+            let owner;
+            if (activeUser) {
+                // Si hay un usuario en la sesión activa, asignar el "owner" al usuario
+                owner = activeUser.id; // Ajusta esto según la estructura de tu usuario
+            } else {
+                // Si no hay usuario en la sesión activa, asignar el "owner" al administrador
+                owner = 'ADMIN'; // Puedes usar un valor específico o adaptarlo según tus necesidades
+            }
+
+               const updateprod= await prodDB.update(pid, {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock, owner:owner},{new: true});
                     res.status(200).send({ message: "Producto actualizado con éxito", updateprod });
         } catch (error) {
             // console.error('Error:', error);
