@@ -24,6 +24,8 @@ import loggerTest from "./routers/loggerTest.routers.js"
 import {logger} from "./utils/logger.js"
 import nodemailer from "./routers/reset-password.routers.js"
 import updaterole from "./routers/updaterole.routers.js"
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express"
 
 
 const app = express();
@@ -49,6 +51,19 @@ app.use(session({
   resave: true,
   saveUninitialized:true
 }))
+
+const swaggerOptions= {
+  definition: {
+      openapi: '3.0.1',
+      info:{
+          title: 'Documentacion de app',
+          description: 'descripcion de la app'
+      }
+  },
+  apis: [`${_dirname}/docs/**/*.yaml`]
+}
+const spec = swaggerJSDoc(swaggerOptions)
+
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
@@ -71,6 +86,7 @@ app.use("/mockingproducts",mockingproducts);
 app.use("/loggerTest",loggerTest)
 app.use("/reset-password",nodemailer)
 app.use("/api/users/premium",updaterole)
+app.use("/apidocs",swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
 
 app.use(handleErrors);
 

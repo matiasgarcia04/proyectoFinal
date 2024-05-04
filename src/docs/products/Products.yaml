@@ -1,0 +1,167 @@
+paths:
+  /api/products/:
+    get:
+      summary: obtiene todos los usuarios
+      tags:
+        - Products
+      responses:
+        "200":
+          description: exito
+          content:
+            application/Json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "500":
+          description: error
+    post:
+      summary: crea un producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema: 
+                $ref: '#/components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: producto creado con exito
+        "500":
+          description: error
+
+  /api/products/{pid}:
+    get:
+      summary: obtiene un producto por id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto, llamado pid , que desea solicitar
+          schema: 
+            type: string
+      responses:
+        "200": 
+          description: exito
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Product'
+        "500":
+          description: error
+    put:
+      summary: actualiza un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto, llamado pid , que desea solicitar
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema: 
+                $ref: '#/components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: producto creado con exito
+        "500":
+          description: error
+    delete:
+      summary: borra un producto por id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto, llamado pid , que desea solicitar
+          schema: 
+            type: string
+      responses:
+        "200": 
+          description: exito
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Product'
+        "500":
+          description: error
+
+
+
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: nombre del producto
+        description:
+          type: string
+          description: detalles del producto
+        price:
+          type: number
+          description: precio del producto
+        thumbnail: 
+          type: string
+          description: imagen del producto
+        code:
+          type: string
+          description: codigo del producto
+        stock:
+          type: number
+          description: cantidad disponible
+        owner:
+          type: string
+          description: dueño del producto
+      example:
+        _id: ObjectId('afsffbjuasdudw735648h')
+        title: probando swagger
+        description: descripcion probando swagger
+        price: 123
+        thumbnail: no hay
+        code: 123abc
+        stock: 20
+        owner: ADMIN
+
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: nombre del producto
+        description:
+          type: string
+          description: detalles del producto
+        price:
+          type: number
+          description: precio del producto
+        thumbnail: 
+          type: string
+          description: imagen del producto
+        code:
+          type: string
+          description: codigo del producto
+        stock:
+          type: number
+          description: cantidad disponible
+      example:
+        title: probando swagger
+        description: descripcion probando swagger
+        price: 123
+        thumbnail: no hay
+        code: 123abc
+        stock: 20

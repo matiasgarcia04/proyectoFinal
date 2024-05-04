@@ -38,9 +38,10 @@ class carts{
     }
 
     addToCart= async(req,res)=>{
+        
         // const cartid= req.session.cart;
         const { cid, pid } = req.params;
-        // const user= req.session.user;
+//         // const user= req.session.user;
   const { quantity } = req.body;
 //   const { quantity } = 1;
 
@@ -97,6 +98,8 @@ class carts{
               else {
                let product=cart.products.id({_id:pid});
                product.quantity=req.body.quantity;
+               console.log(product)
+               console.log(product.quantity)
             //    product.quantity=1;
                cart.save();
                res.status(200).send({ message: 'producto del carrito actualizado' });
@@ -109,7 +112,7 @@ class carts{
         try {
             const {cid}= req.params;
             await cartDB.delete(cid)
-                res.status(200).send({ message: 'Carrito borrado con éxito' });
+                res.status(200).send({ message: 'Carrito vaciado con éxito' });
         } catch (error) {
                 res.status(500).send('error')
             }

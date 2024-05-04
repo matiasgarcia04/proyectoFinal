@@ -15,6 +15,8 @@
             <button type="submit">Agregar al carrito</button>
         </form>
            <form action="/products/{{this._id}}" method="GET">
+        {{!-- agreagar el valor del cartid --}}
+           <input type="hidden" name="cartId" value="{{cartid}}">
             <input type="hidden" name="productId" value="{{this._id}}">
             <button type="submit">detalle del producto</button>
         </form>

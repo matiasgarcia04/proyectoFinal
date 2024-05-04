@@ -33,7 +33,7 @@ class CartManagerDB {
 
 
     // borrar carrito
-    async delete(uid){
+    async deletecart(uid){
         return await cartModel.findByIdAndDelete({_id: uid})
     }
 

@@ -37,10 +37,11 @@
             <p>{{code}}</p>
             <h4>Stock:</h4>
             <p>{{stock}}</p>
-            <form action="/cart/{{user.cart}}/products/{{_id}}" method="POST">
-                <input type="hidden" name="productId" value="{{_id}}">
-                <button type="submit">Agregar al carrito</button>
-            </form>
+<form action="/cart/{{cartid}}/products/{{_id}}" method="POST">
+    <input type="hidden" name="productId" value="{{_id}}">
+    <input type="hidden" name="cartId" value="{{cartid}}">
+    <button type="submit">Agregar al carrito</button>
+</form>
         {{/with}}
         <a href="/products">Volver a todos los productos</a>
 

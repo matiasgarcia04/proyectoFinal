@@ -14,6 +14,8 @@ class products {
         const limit = parseInt(req.query.limit) || 10;
         const pag = parseInt(req.query.pag) || 1;
         const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
+        // const cartid= req.session.user.cart;
+        // console.log(cartid)
         const {
                   docs,
                   hasPrevPage, 
@@ -33,7 +35,8 @@ class products {
               prevPage,
               nextPage,
               page,
-              userName: name
+              userName: name,
+            //   cartid
           });
       } else {
           
@@ -43,13 +46,15 @@ class products {
               hasNextPage,
               prevPage,
               nextPage,
-              page
+              page,
+            //   cartid
           });
       }
 
     }
     getproductbyid = async(req,res) =>{
-
+        // const cartid= req.session.user.cart;
+        // console.log(cartid)
         const productId = req.params.id;
         // const user= req.session.user;
         const product= await prodDB.getByIDlean({_id:productId})

@@ -1,8 +1,6 @@
-// import ProdManagerDB from "../dao/ProdManagerDB.js"
+
 import { prodDB } from "../services/services.js";
 
-
-// const prodDB = new ProdManagerDB();
 
 
 class apiproducts{
@@ -17,6 +15,7 @@ class apiproducts{
 
     getProduct= async (req,res)=>{
         try {
+          
             const {pid} = req.params;
           const theproduct = await prodDB.getByID(pid);
             if (theproduct) {
@@ -35,7 +34,7 @@ class apiproducts{
         try {
             const { title, description, price, thumbnail, code, stock } = req.body;
 
-            const activeUser = req.session.user; // Supongamos que esto contiene los datos del usuario
+            const activeUser = req.session.user;
             
         // Determinar el valor del campo "owner"
         let owner;
@@ -44,7 +43,7 @@ class apiproducts{
             owner = activeUser.email; // Ajusta esto según la estructura de tu usuario
         } else {
             // Si no hay usuario en la sesión activa, asignar el "owner" al administrador
-            owner = 'ADMIN'; // Puedes usar un valor específico o adaptarlo según tus necesidades
+            owner = 'ADMIN';
         }
 
             
@@ -61,7 +60,7 @@ class apiproducts{
             const { pid } = req.params;
             const {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock} = req.body;
 
-            const activeUser = req.session.user; // Supongamos que esto contiene los datos del usuario
+            const activeUser = req.session.user; 
 
             // Determinar el valor del campo "owner"
             let owner;
