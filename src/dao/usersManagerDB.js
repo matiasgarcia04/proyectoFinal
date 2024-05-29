@@ -20,10 +20,15 @@ class userManagerDB{
     //     return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password })
     // }
     // asociando carrito al usuario--------------------------
-    async create ({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
+    async create ({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart,documents:documents,last_connection:last_connection }){
         
-        return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
+        return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart,documents:documents,last_connection:last_connection })
     }
+    // sin nueva actualizacion
+    // async create ({first_name:first_name,last_name:last_name,email:email, age:age, password:password,cart:cart }){
+        
+    //     return await userModel.create({first_name:first_name,last_name:last_name,email:email, age:age, password:password, cart:cart })
+    // }
     // async update(uid, {filter}) {
     //     return await userModel.findByIdAndUpdate(uid, {filter}, {new: true});
     //   }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import admin from "../middleware/admin.js";
 import passport from "passport";
 import sessionctrl from "../controllers/session.routers.controller.js";
+import { userDB } from "../services/services.js";
 
 const router = Router();
 
@@ -33,6 +34,15 @@ router.get('/faillogin', async (req, res) => {
 })
 
 router.post('/logout', async (req, res)=>{
+        console.log(new Date().toString())
+        console.log(Date.prototype.toGMTString())
+        console.log(Date.prototype.toLocaleDateString())
+        const uid = req.session.user.id;
+        const user = await userDB.getByID(uid);
+        const currentDate = new Date();
+        const dates = currentDate.toISOString();
+        user.last_connection = dates;
+        await user.save();
     res.clearCookie('token')
     req.session.destroy(err => {
         if(err) return res.send({status:'Logout error', message: err})           
@@ -40,6 +50,16 @@ router.post('/logout', async (req, res)=>{
     res.status(200).redirect('/login')
     console.log("borrado con exito")
 })
+
+// router.post('/logout', async (req, res)=>{
+//     res.clearCookie('token')
+//     req.session.destroy(err => {
+//         if(err) return res.send({status:'Logout error', message: err})           
+//     })
+//     res.status(200).redirect('/login')
+//     console.log("borrado con exito")
+// })
+
 
 router.get('/current', controllersession.current);
 

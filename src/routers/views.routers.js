@@ -48,4 +48,5 @@ router.get("/resetpassconfirm/:token",(req,res)=>{
     res.render('resetpassconfirm', { token });
 })
 
+
 export default router;

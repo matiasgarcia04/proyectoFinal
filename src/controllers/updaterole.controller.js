@@ -11,7 +11,17 @@ class updaterol {
             if (!user) {
                 return res.status(404).json({ message: 'Usuario no encontrado' });
             }
-    
+
+            const cantidadArchivos = user.documents.length;
+            console.log(user)
+            console.log(user.documents)
+            console.log(cantidadArchivos)
+
+            if (!user.documents || cantidadArchivos < 3) {
+                return res.status(400).json({ 
+                  status: 'error',
+                  error: `El usuario no ha terminado de procesar su documentación. Falta ${3 - cantidadArchivos} documento.` })
+              }
             // Cambia el rol del usuario
             user.role = user.role === 'USER' ? 'USER_PREMIUM' : 'USER';
            const updateuser= await user.save();

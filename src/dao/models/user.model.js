@@ -22,6 +22,18 @@ const usertSchema = new mongoose.Schema({
         enum: ['USER','USER_PREMIUM','ADMIN'],
         default: 'USER'
     },
+
+    documents: {
+        type: [{
+            name: String,
+            reference: String
+        }],
+        default: []
+    },
+    last_connection: {
+        type: Date,
+        default: null,
+    },
 }) 
 
 const userModel = mongoose.model(usersCollection, usertSchema)
