@@ -19,8 +19,10 @@ router.get("/:cid", controllercarts.getCartByID);
 
 
 
+router.post('/:cid/products/:pid' , controllercarts.addToCart);
 
-router.post('/:cid/products/:pid', controllercarts.addToCart);
+
+
 
 // check// DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
 router.delete("/:cid/products/:pid",controllercarts.deleteProduct);

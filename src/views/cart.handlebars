@@ -9,10 +9,11 @@
             <h3>quantity:</h3><p>{{quantity}} </p> 
         </li>
         {{/each}}
+           <form action="/cart/{{cid}}/purchase" method="POST">
+            <button type="submit">Finalizar compra</button>
+        </form>
         <div>
             <a href="/products">volver a todos los productos</a>
         </div>
-        
-    
     </center>
 </div>

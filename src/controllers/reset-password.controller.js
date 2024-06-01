@@ -8,32 +8,26 @@ import configObjet from "../config/dotenv.js";
 class resetpassctrl {
     createrequest= async (req, res) => {
         try {
-          const { email } = req.body;
+            const { email } = req.body;
+            const user = await userDB.getByEmail({email:email});
       
-          // Verifica si el usuario existe en la base de datos
-          const user = await userDB.getByEmail({email:email});
-    
-          // if (!user)
-          if (!user) return res.status(400).send({status: 'error', message: 'El usuario no existe'})
-    
-    
-        const token= generatetoken({user:email,expiresIn: '1h'});
-        
-    
-        const to= email
-        const subject='Reinicio de contraseña'
-        const html=`<p>Haz clic <a href="http://${req.headers.host}/resetpassconfirm/${token}">aquí</a> para restablecer tu contraseña.</p>`
-    
-    
-          sendMail(to,subject,html)
-    
-          res.redirect('/mensajenviado'); // Página de confirmación de envío de correo
+            if (!user) return res.status(400).send({status: 'error', message: 'El usuario no existe'})
+      
+            const token= generatetoken({user:email,expiresIn: '1h'});
+            
+            const to= email
+            const subject='Reinicio de contraseña'
+            const html=`<p>Haz clic <a href="http://${req.headers.host}/resetpassconfirm/${token}">aquí</a> para restablecer tu contraseña.</p>`
+      
+            sendMail(to,subject,html)
+      
+            res.redirect('/mensajenviado');
         } catch (error) {
-        //   console.error(error);
+       
           req.logger.error('Error:', error);
           res.status(500).send('Error al procesar la solicitud');
         }
-      };
+    };
     newpass=async (req, res) => {
         try {
           
@@ -45,9 +39,7 @@ class resetpassctrl {
             const user = await userDB.getByEmail( {email:email})
           
             if (!decodedUser) return res.status(400).send({status: 'error', message: 'El token no es válido o ha expirado'})
-    
-        
-    
+
             if (!user) {
                 return res.status(404).send({ error: 'Usuario no encontrado' });
             }
@@ -67,7 +59,6 @@ class resetpassctrl {
     
             res.send('¡Contraseña actualizada con éxito! <a href="/login">Iniciar sesión</a>');
         } catch (error) {
-            // console.error(error);
             req.logger.error('Error:', error);
             res.status(500).send('Error al procesar la solicitud');
         }

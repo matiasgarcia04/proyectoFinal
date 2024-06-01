@@ -8,11 +8,6 @@ const router = Router();
 
 const controllersession = new sessionctrl();
 
-
-// router.get("/",(req,res)=>{
-//     res.redirect('/login')
-// })
-
 router.post('/register',passport.authenticate('register',{failureRedirect:'/api/session/failregister'}), async (req, res) => {
     res.redirect('/login');
 })
@@ -35,12 +30,11 @@ router.get('/faillogin', async (req, res) => {
 
 router.post('/logout', async (req, res)=>{
         console.log(new Date().toString())
-        console.log(Date.prototype.toGMTString())
-        console.log(Date.prototype.toLocaleDateString())
+    
         const uid = req.session.user.id;
         const user = await userDB.getByID(uid);
         const currentDate = new Date();
-        const dates = currentDate.toISOString();
+        const dates = currentDate.toString();
         user.last_connection = dates;
         await user.save();
     res.clearCookie('token')
@@ -50,16 +44,6 @@ router.post('/logout', async (req, res)=>{
     res.status(200).redirect('/login')
     console.log("borrado con exito")
 })
-
-// router.post('/logout', async (req, res)=>{
-//     res.clearCookie('token')
-//     req.session.destroy(err => {
-//         if(err) return res.send({status:'Logout error', message: err})           
-//     })
-//     res.status(200).redirect('/login')
-//     console.log("borrado con exito")
-// })
-
 
 router.get('/current', controllersession.current);
 

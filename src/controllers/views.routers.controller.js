@@ -1,8 +1,6 @@
 
 import { prodDB } from "../services/services.js";
 
-
-
 class products {
 
     gotohome=async(req,res)=>{
@@ -14,8 +12,7 @@ class products {
         const limit = parseInt(req.query.limit) || 10;
         const pag = parseInt(req.query.pag) || 1;
         const sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : '';
-        // const cartid= req.session.user.cart;
-        // console.log(cartid)
+
         const {
                   docs,
                   hasPrevPage, 
@@ -26,6 +23,7 @@ class products {
               } =await prodDB.paginate(sort,limit, pag);
         if (req.session.user) {
           const { name } = req.session.user;
+          const cartid= req.session.user.cart
           
       
           res.render('products', {
@@ -36,7 +34,7 @@ class products {
               nextPage,
               page,
               userName: name,
-            //   cartid
+              cartid
           });
       } else {
           
@@ -47,24 +45,25 @@ class products {
               prevPage,
               nextPage,
               page,
-            //   cartid
+            
           });
       }
 
     }
+
     getproductbyid = async(req,res) =>{
-        // const cartid= req.session.user.cart;
-        // console.log(cartid)
         const productId = req.params.id;
-        // const user= req.session.user;
-        const product= await prodDB.getByIDlean({_id:productId})
-        const {title,description,price,stock,code} = await prodDB.getByIDlean({_id:productId});
-        // const product= {title,description,price,stock,code}
-            res.render('productdetail', { product });
-            // console.log({user})
-            
         
-    };
+        const product= await prodDB.getByIDlean({_id:productId})
+            // Verifica si hay una sesión de usuario activa
+            if (req.session.user) {
+                const cartid = req.session.user.cart;
+                res.render('productdetail', { product, cartid });
+            } else {
+                // Si no hay sesión de usuario, renderiza sin `cartid`
+                res.render('productdetail', { product });
+            }
+        };
 
     gettorealtimeproducts=async(req,res)=>{
         const owner = req.session.user.role

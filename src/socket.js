@@ -1,4 +1,4 @@
-// import ProdManagerDB from "./dao/ProdManagerDB.js";
+
 import mongoose from "mongoose";
 import { prodDB } from "./services/services.js";
 

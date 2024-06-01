@@ -29,7 +29,7 @@ router.get('/perfil',preventprofile,(req,res)=>{
 
 router.get("/products", controllerviews.getProducts);
   
-  router.get('/products/:id', controllerviews.getproductbyid);
+router.get('/products/:id', controllerviews.getproductbyid);
 
 router.get('/realtimeproducts',isAdmin, controllerviews.gettorealtimeproducts);
 
@@ -48,5 +48,8 @@ router.get("/resetpassconfirm/:token",(req,res)=>{
     res.render('resetpassconfirm', { token });
 })
 
+router.get("/fincompra",(req,res)=>{
+    res.render('fincompra')
+})
 
 export default router;

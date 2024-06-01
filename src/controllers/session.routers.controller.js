@@ -1,8 +1,5 @@
-// import configObjet from "../config/dotenv.js";
-import UserDTO from "../dto/DtoUser.js";
-// import { generatetoken } from "../utils/token.js";
-// import jwt from "jsonwebtoken";
 
+import UserDTO from "../dto/DtoUser.js";
 
 
 class sessionctrl {
@@ -60,11 +57,11 @@ res.redirect('/products')
           }
           res.status(200).json(user);
         } catch (error) {
-          // console.error('Error al obtener el usuario actual:', error);
+     
           req.logger.error('Error al obtener el usuario actual:', error);
           res.status(500).json({ message: 'Error del servidor' });
         }
-  }
+    }
 
 }
 

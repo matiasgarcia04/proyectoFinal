@@ -4,9 +4,6 @@ const router = Router();
 
 const resetpass = new resetpassctrl()
 
-
-
-
 router.get('/',(req,res)=>{
 
     res.send('email enviado')

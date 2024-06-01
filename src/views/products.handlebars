@@ -6,22 +6,25 @@
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="submit" value="Logout">
             </form>
+            <a href="/cart/{{cartid}}">ver carrito</a>
         {{/if}}
-    <h2>products</h2>
+
+        <h2>products</h2>
     {{#each products}}
          <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.code}} - {{this.stock}}</li>
-         <form action="" method="POST">
-            <input type="hidden" name="productId" value="{{this._id}}">
+       <form action="/api/carts/{{../cartid}}/products/{{this._id}}" method="POST">
+            <label for="quantity">Cantidad:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="{{this.stock}}" value="1">
             <button type="submit">Agregar al carrito</button>
         </form>
            <form action="/products/{{this._id}}" method="GET">
-        {{!-- agreagar el valor del cartid --}}
            <input type="hidden" name="cartId" value="{{cartid}}">
             <input type="hidden" name="productId" value="{{this._id}}">
             <button type="submit">detalle del producto</button>
         </form>
 
     {{/each}}
+    
     {{#if hasPrevPage}}
             <a href="products?pag={{prevPage}}">Anterior</a>
         {{/if}}

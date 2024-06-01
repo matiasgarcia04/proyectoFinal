@@ -132,11 +132,10 @@ describe('Pruebas de la ruta /api/user/:uid', () => {
       const userId = '123'; // Cambia esto al ID del usuario que deseas obtener
       const response = await request(app).get(`/api/user/${userId}`);
   
-      // Verifica que la respuesta sea exitosa (código 200)
+      // Verificar que la respuesta sea exitosa (código 200)
       expect(response.status).to.equal(200);
   
-      // Verifica que la respuesta contenga los datos esperados del usuario
+      // Verificar que la respuesta contenga los datos esperados del usuario
       expect(response.body).to.have.property('name', 'John Doe');
-      // ... otras aserciones según tu modelo de datos
     });
   });

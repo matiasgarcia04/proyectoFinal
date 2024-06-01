@@ -23,10 +23,10 @@ import { addlogger } from "./utils/logger.js";
 import loggerTest from "./routers/loggerTest.routers.js"
 import {logger} from "./utils/logger.js"
 import nodemailer from "./routers/reset-password.routers.js"
-// import updaterole from "./routers/updaterole.routers.js"
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express"
 import apiUser from "./routers/apiUsers.routers.js"
+import preventprofile from "./middleware/preventprofile.js";
 
 
 const app = express();
@@ -79,14 +79,13 @@ app.set('view engine', 'handlebars');
 app.use("/",viewsRouter);
 app.use("/realtimeproducts", realTimeRouter)
 app.use("/api/products", productsrouter);
-app.use("/api/carts", cartsrouters);
+app.use("/api/carts",preventprofile, cartsrouters);
 app.use("/api/session",sessionrouter)
 app.use("/chat",chatRouter)
 app.use("/cart", cartid);
 app.use("/mockingproducts",mockingproducts);
 app.use("/loggerTest",loggerTest)
 app.use("/reset-password",nodemailer)
-// app.use("/api/users/premium",updaterole)
 app.use("/apidocs",swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
 app.use("/api/users",apiUser)
 

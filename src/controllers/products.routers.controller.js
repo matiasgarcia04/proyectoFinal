@@ -20,12 +20,12 @@ class apiproducts{
           const theproduct = await prodDB.getByID(pid);
             if (theproduct) {
               res.send(theproduct);
-                // console.log(theproduct);
+              
             } else {
                     res.status(404).send('Producto no encontrado');
                 }
         } catch (error) {
-            // console.error('Error:', error);
+           
             req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
         }
@@ -40,7 +40,7 @@ class apiproducts{
         let owner;
         if (activeUser) {
             // Si hay un usuario en la sesión activa, asignar el "owner" al usuario
-            owner = activeUser.email; // Ajusta esto según la estructura de tu usuario
+            owner = activeUser.email; 
         } else {
             // Si no hay usuario en la sesión activa, asignar el "owner" al administrador
             owner = 'ADMIN';
@@ -50,7 +50,7 @@ class apiproducts{
                 await prodDB.create({title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock, owner:owner});
                      res.status(201).send({ message: "Producto agregado con éxito" });
         } catch (error) {
-            // console.error('Error:', error);
+           
             req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
              }
@@ -62,20 +62,20 @@ class apiproducts{
 
             const activeUser = req.session.user; 
 
-            // Determinar el valor del campo "owner"
+            // "owner"
             let owner;
             if (activeUser) {
-                // Si hay un usuario en la sesión activa, asignar el "owner" al usuario
-                owner = activeUser.id; // Ajusta esto según la estructura de tu usuario
+                
+                owner = activeUser.email; 
             } else {
-                // Si no hay usuario en la sesión activa, asignar el "owner" al administrador
-                owner = 'ADMIN'; // Puedes usar un valor específico o adaptarlo según tus necesidades
+               
+                owner = 'ADMIN';
             }
 
                const updateprod= await prodDB.update(pid, {title:title, description: description,price: price, thumbnail:thumbnail, code: code, stock:stock, owner:owner},{new: true});
                     res.status(200).send({ message: "Producto actualizado con éxito", updateprod });
         } catch (error) {
-            // console.error('Error:', error);
+          
             req.logger.error('Error:', error);
             res.status(500).json({ message: 'Error del servidor' });
             }

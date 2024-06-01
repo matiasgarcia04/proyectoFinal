@@ -16,7 +16,7 @@ class filesload {
         
         user.save()
             res.send('Archivo subido correctamente');
-          }
+    }
 
     products=async (req, res) => {
 
@@ -33,7 +33,7 @@ class filesload {
         
         user.save()
             res.send('Archivo subido correctamente');
-          }
+    }
     
     profile=async (req, res) => {
 
@@ -50,7 +50,7 @@ class filesload {
         
         user.save()
             res.send('Archivo subido correctamente');
-          }
+    }
     
 }
 
